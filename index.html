@@ -1,0 +1,2479 @@
+<!DOCTYPE html>
+<html lang="ka">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#080608">
+<meta name="description" content="ერთი განსაკუთრებული საღამოს მოწვევა">
+<title>ერთი განსაკუთრებული საღამო</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Georgian:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+:root{
+    --black:#070607;
+    --black2:#0c090b;
+    --wine:#4a0e1b;
+    --wine2:#681728;
+    --red:#8b2438;
+    --gold:#c8a36a;
+    --gold2:#e4ca99;
+    --cream:#f5efe7;
+    --muted:#9d9396;
+    --muted2:#70676a;
+    --line:rgba(220,185,125,.22);
+    --whiteLine:rgba(255,255,255,.10);
+    --ease:cubic-bezier(.22,.75,.2,1);
+}
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    -webkit-tap-highlight-color:transparent;
+}
+
+html{
+    background:var(--black);
+    scroll-behavior:smooth;
+}
+
+body{
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    background:var(--black);
+    color:var(--cream);
+    font-family:"Noto Sans Georgian",sans-serif;
+}
+
+button,
+input{
+    font:inherit;
+}
+
+button{
+    cursor:pointer;
+}
+
+.app{
+    position:relative;
+    width:100%;
+    height:100dvh;
+    min-height:100svh;
+    overflow:hidden;
+    background:var(--black);
+}
+
+/* =========================================
+   LOADER
+========================================= */
+
+.loader{
+    position:fixed;
+    inset:0;
+    z-index:9999;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#070607;
+    transition:
+        opacity .9s ease,
+        visibility .9s ease;
+}
+
+.loader.hide{
+    opacity:0;
+    visibility:hidden;
+}
+
+.loader-box{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+}
+
+.loader-logo{
+    width:52px;
+    height:52px;
+    object-fit:contain;
+    margin-bottom:22px;
+    opacity:.82;
+}
+
+.loader-line{
+    position:relative;
+    width:75px;
+    height:1px;
+    background:rgba(200,163,106,.18);
+    overflow:hidden;
+}
+
+.loader-line::after{
+    content:"";
+    position:absolute;
+    left:-40%;
+    top:0;
+    width:40%;
+    height:100%;
+    background:var(--gold);
+    animation:loaderMove 1.2s infinite ease-in-out;
+}
+
+@keyframes loaderMove{
+    from{left:-40%}
+    to{left:100%}
+}
+
+/* =========================================
+   ATMOSPHERE
+========================================= */
+
+.ambient{
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    z-index:50;
+}
+
+.ambient::before{
+    content:"";
+    position:absolute;
+    width:900px;
+    height:900px;
+    left:-500px;
+    top:-400px;
+    background:radial-gradient(
+        circle,
+        rgba(100,17,37,.18),
+        transparent 67%
+    );
+}
+
+.ambient::after{
+    content:"";
+    position:absolute;
+    width:700px;
+    height:700px;
+    right:-400px;
+    bottom:-400px;
+    background:radial-gradient(
+        circle,
+        rgba(200,163,106,.07),
+        transparent 68%
+    );
+}
+
+.grain{
+    position:fixed;
+    inset:0;
+    z-index:900;
+    pointer-events:none;
+    opacity:.025;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.8'/%3E%3C/svg%3E");
+}
+
+/* =========================================
+   SCENE SYSTEM
+========================================= */
+
+.scene{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    min-height:100svh;
+
+    opacity:0;
+    visibility:hidden;
+    pointer-events:none;
+
+    transform:scale(1.025);
+
+    transition:
+        opacity .85s var(--ease),
+        transform 1.15s var(--ease),
+        visibility .85s;
+}
+
+.scene.active{
+    opacity:1;
+    visibility:visible;
+    pointer-events:auto;
+    transform:scale(1);
+}
+
+/* =========================================
+   INTRO
+========================================= */
+
+.intro{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:
+        max(35px,env(safe-area-inset-top))
+        25px
+        max(35px,env(safe-area-inset-bottom));
+    text-align:center;
+    background:
+        radial-gradient(
+            circle at 50% 45%,
+            rgba(83,15,30,.15),
+            transparent 48%
+        ),
+        var(--black);
+}
+
+.intro-content{
+    position:relative;
+    z-index:5;
+    width:min(760px,100%);
+}
+
+.micro{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:13px;
+
+    color:var(--gold2);
+    font-size:9px;
+    letter-spacing:.34em;
+
+    opacity:0;
+    transform:translateY(15px);
+
+    transition:
+        opacity .9s .1s var(--ease),
+        transform .9s .1s var(--ease);
+}
+
+.micro::before,
+.micro::after{
+    content:"";
+    width:30px;
+    height:1px;
+    background:var(--line);
+}
+
+.scene.active .micro{
+    opacity:1;
+    transform:none;
+}
+
+.intro-title{
+    margin-top:28px;
+
+    font-family:"Playfair Display","Noto Sans Georgian",serif;
+    font-size:clamp(42px,9vw,86px);
+    line-height:1.08;
+    font-weight:400;
+    letter-spacing:-.035em;
+
+    opacity:0;
+    transform:translateY(25px);
+
+    transition:
+        opacity 1s .25s var(--ease),
+        transform 1s .25s var(--ease);
+}
+
+.scene.active .intro-title{
+    opacity:1;
+    transform:none;
+}
+
+.intro-description{
+    max-width:580px;
+    margin:25px auto 39px;
+
+    color:#bcb3b5;
+    font-size:14px;
+    line-height:2;
+
+    opacity:0;
+    transform:translateY(20px);
+
+    transition:
+        opacity .9s .55s var(--ease),
+        transform .9s .55s var(--ease);
+}
+
+.scene.active .intro-description{
+    opacity:1;
+    transform:none;
+}
+
+.open-button{
+    position:relative;
+
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:18px;
+
+    min-width:195px;
+    height:54px;
+    padding:0 25px;
+
+    color:#fff;
+    background:rgba(255,255,255,.025);
+
+    border:1px solid rgba(200,163,106,.35);
+
+    overflow:hidden;
+
+    opacity:0;
+    transform:translateY(18px);
+
+    transition:
+        opacity .9s .8s var(--ease),
+        transform .9s .8s var(--ease),
+        background .3s ease,
+        border-color .3s ease;
+}
+
+.scene.active .open-button{
+    opacity:1;
+    transform:none;
+}
+
+.open-button::before{
+    content:"";
+    position:absolute;
+    inset:0;
+
+    background:linear-gradient(
+        110deg,
+        transparent 25%,
+        rgba(255,255,255,.08) 50%,
+        transparent 75%
+    );
+
+    transform:translateX(-120%);
+    transition:transform .8s ease;
+}
+
+.open-button:hover::before{
+    transform:translateX(120%);
+}
+
+.open-button:hover{
+    border-color:rgba(200,163,106,.7);
+    background:rgba(200,163,106,.06);
+}
+
+.open-arrow{
+    color:var(--gold2);
+    font-size:20px;
+}
+
+/* =========================================
+   VIDEO
+========================================= */
+
+.video-scene{
+    background:#020202;
+}
+
+.video-wrap{
+    position:absolute;
+    inset:0;
+    overflow:hidden;
+    background:#020202;
+}
+
+.video{
+    position:absolute;
+    inset:0;
+
+    width:100%;
+    height:100%;
+
+    object-fit:cover;
+    object-position:center center;
+
+    background:#020202;
+}
+
+.video-shade{
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(0,0,0,.54) 0%,
+            rgba(0,0,0,.08) 35%,
+            rgba(0,0,0,.05) 55%,
+            rgba(0,0,0,.66) 100%
+        );
+}
+
+.video-title{
+    position:absolute;
+    top:max(34px,env(safe-area-inset-top));
+    left:0;
+    right:0;
+
+    display:flex;
+    justify-content:center;
+
+    z-index:3;
+
+    color:#fff;
+    font-size:12px;
+    font-weight:400;
+    letter-spacing:.08em;
+
+    text-shadow:0 2px 20px rgba(0,0,0,.8);
+}
+
+.video-title::before{
+    content:"";
+    width:27px;
+    height:1px;
+    margin:auto 11px auto 0;
+
+    background:rgba(255,255,255,.65);
+}
+
+.video-info{
+    position:absolute;
+
+    left:24px;
+    right:24px;
+    bottom:max(32px,env(safe-area-inset-bottom));
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    z-index:3;
+}
+
+.video-number{
+    color:rgba(255,255,255,.7);
+    font-size:9px;
+    letter-spacing:.3em;
+}
+
+.video-progress{
+    width:100px;
+    height:1px;
+    background:rgba(255,255,255,.25);
+    overflow:hidden;
+}
+
+.video-progress span{
+    display:block;
+    width:0;
+    height:100%;
+    background:var(--gold2);
+}
+
+.video-scene.playing .video-progress span{
+    animation:fiveSeconds 5s linear forwards;
+}
+
+@keyframes fiveSeconds{
+    from{width:0}
+    to{width:100%}
+}
+
+/* =========================================
+   INTERLUDE
+========================================= */
+
+.interlude{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    text-align:center;
+    padding:30px;
+
+    background:
+        radial-gradient(
+            circle at center,
+            rgba(91,17,34,.16),
+            transparent 50%
+        ),
+        var(--black);
+}
+
+.interlude-content{
+    width:min(720px,100%);
+}
+
+.interlude-number{
+    color:var(--gold);
+    font-size:9px;
+    letter-spacing:.35em;
+    margin-bottom:25px;
+}
+
+.interlude-title{
+    font-family:"Playfair Display","Noto Sans Georgian",serif;
+    font-size:clamp(37px,8vw,72px);
+    line-height:1.1;
+    font-weight:400;
+    margin-bottom:18px;
+}
+
+.interlude-text{
+    color:var(--muted);
+    font-size:13px;
+    line-height:2;
+}
+
+/* =========================================
+   CHOICE SCENE
+========================================= */
+
+.choice-scene{
+    background:
+        radial-gradient(
+            circle at 50% 0%,
+            rgba(90,16,34,.12),
+            transparent 42%
+        ),
+        var(--black);
+}
+
+.choice-scroll{
+    position:absolute;
+    inset:0;
+
+    overflow-y:auto;
+    overflow-x:hidden;
+
+    padding:
+        max(55px,env(safe-area-inset-top))
+        20px
+        max(70px,env(safe-area-inset-bottom));
+
+    -webkit-overflow-scrolling:touch;
+    overscroll-behavior:contain;
+}
+
+.choice-container{
+    width:min(820px,100%);
+    margin:auto;
+}
+
+.choice-header{
+    text-align:center;
+    margin-bottom:45px;
+}
+
+.choice-header .micro{
+    opacity:1;
+    transform:none;
+}
+
+.choice-header h2{
+    margin-top:22px;
+
+    font-family:"Playfair Display","Noto Sans Georgian",serif;
+    font-size:clamp(39px,8vw,68px);
+    line-height:1.1;
+    font-weight:400;
+    letter-spacing:-.025em;
+}
+
+.choice-header p{
+    margin-top:15px;
+
+    color:var(--muted);
+    font-size:13px;
+}
+
+/* =========================================
+   CHOICE BLOCK
+========================================= */
+
+.choice-block{
+    margin-bottom:38px;
+}
+
+.choice-block-head{
+    display:flex;
+    align-items:end;
+    justify-content:space-between;
+
+    margin-bottom:13px;
+}
+
+.choice-block-title{
+    color:#eee7e1;
+    font-size:14px;
+    font-weight:500;
+}
+
+.choice-block-number{
+    color:#62595c;
+    font-size:9px;
+    letter-spacing:.25em;
+}
+
+.option-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:9px;
+}
+
+.option-card{
+    position:relative;
+
+    min-height:76px;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    padding:16px 17px;
+
+    color:#d2cbcb;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255,255,255,.045),
+            rgba(255,255,255,.015)
+        );
+
+    border:1px solid rgba(255,255,255,.085);
+
+    transition:
+        border-color .3s ease,
+        background .3s ease,
+        transform .25s ease,
+        box-shadow .3s ease;
+}
+
+.option-card::after{
+    content:"";
+    position:absolute;
+    left:0;
+    top:0;
+    bottom:0;
+
+    width:2px;
+
+    background:var(--gold);
+
+    opacity:0;
+
+    transition:opacity .3s ease;
+}
+
+.option-card:hover{
+    border-color:rgba(200,163,106,.38);
+}
+
+.option-card:active{
+    transform:scale(.985);
+}
+
+.option-card.selected{
+    color:#fff;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(105,20,39,.28),
+            rgba(61,11,22,.13)
+        );
+
+    border-color:rgba(200,163,106,.72);
+
+    box-shadow:
+        0 10px 35px rgba(0,0,0,.22),
+        inset 0 0 30px rgba(120,20,42,.06);
+}
+
+.option-card.selected::after{
+    opacity:1;
+}
+
+.option-name{
+    font-size:12px;
+}
+
+.option-index{
+    color:#665d60;
+    font-size:9px;
+}
+
+.option-card.selected .option-index{
+    color:var(--gold2);
+}
+
+/* =========================================
+   DATE + TIME
+========================================= */
+
+.date-box{
+    position:relative;
+
+    padding:19px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,.04),
+            rgba(255,255,255,.015)
+        );
+
+    border:1px solid rgba(255,255,255,.085);
+}
+
+.date-top{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    margin-bottom:15px;
+}
+
+.date-selected{
+    color:var(--gold2);
+    font-family:"Playfair Display",serif;
+    font-size:18px;
+}
+
+.date-hint{
+    color:#655c5f;
+    font-size:9px;
+    letter-spacing:.12em;
+}
+
+.calendar-week{
+    display:grid;
+    grid-template-columns:repeat(7,1fr);
+    gap:5px;
+
+    margin-bottom:8px;
+}
+
+.week-day{
+    text-align:center;
+    color:#625a5c;
+    font-size:8px;
+    padding-bottom:5px;
+}
+
+.calendar{
+    display:grid;
+    grid-template-columns:repeat(7,1fr);
+    gap:5px;
+}
+
+.day{
+    min-width:0;
+    aspect-ratio:1 / 1;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    color:#bdb5b6;
+    background:rgba(255,255,255,.018);
+    border:1px solid transparent;
+
+    font-size:11px;
+
+    transition:
+        background .25s ease,
+        border-color .25s ease,
+        color .25s ease,
+        transform .2s ease;
+}
+
+.day.empty{
+    background:transparent;
+    pointer-events:none;
+}
+
+.day:not(.empty):hover{
+    border-color:rgba(200,163,106,.35);
+}
+
+.day.selected{
+    color:#fff;
+    background:var(--wine2);
+    border-color:rgba(200,163,106,.8);
+    box-shadow:0 7px 20px rgba(80,10,25,.35);
+}
+
+.day.today{
+    color:var(--gold2);
+}
+
+.day:active{
+    transform:scale(.93);
+}
+
+.time-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:8px;
+}
+
+.time-card{
+    height:54px;
+
+    color:#bbb3b4;
+    background:rgba(255,255,255,.025);
+
+    border:1px solid rgba(255,255,255,.085);
+
+    transition:
+        border-color .25s ease,
+        background .25s ease,
+        color .25s ease,
+        transform .2s ease;
+}
+
+.time-card:hover{
+    border-color:rgba(200,163,106,.4);
+}
+
+.time-card.selected{
+    color:#fff;
+    background:rgba(105,20,39,.25);
+    border-color:rgba(200,163,106,.72);
+}
+
+.time-card:active{
+    transform:scale(.96);
+}
+
+/* =========================================
+   CONTINUE
+========================================= */
+
+.action-area{
+    padding-top:5px;
+    padding-bottom:20px;
+    text-align:center;
+}
+
+.continue-button{
+    position:relative;
+
+    width:100%;
+    height:62px;
+
+    overflow:hidden;
+
+    color:#fff;
+
+    background:
+        linear-gradient(
+            110deg,
+            #4c101d,
+            #741c30
+        );
+
+    border:1px solid rgba(200,163,106,.4);
+
+    transition:
+        transform .25s ease,
+        filter .25s ease,
+        opacity .25s ease;
+}
+
+.continue-button::before{
+    content:"";
+    position:absolute;
+    inset:0;
+
+    background:linear-gradient(
+        110deg,
+        transparent 20%,
+        rgba(255,255,255,.12) 50%,
+        transparent 80%
+    );
+
+    transform:translateX(-120%);
+    transition:transform .8s ease;
+}
+
+.continue-button:hover::before{
+    transform:translateX(120%);
+}
+
+.continue-button:active{
+    transform:scale(.985);
+}
+
+.continue-button:disabled{
+    opacity:.45;
+    cursor:not-allowed;
+}
+
+.continue-inner{
+    position:relative;
+    z-index:2;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:18px;
+
+    font-size:13px;
+}
+
+.continue-arrow{
+    font-size:19px;
+    color:var(--gold2);
+}
+
+.error{
+    min-height:25px;
+    margin-top:13px;
+
+    color:#c77988;
+    font-size:10px;
+}
+
+.success{
+    display:none;
+
+    color:var(--gold2);
+    font-size:10px;
+}
+
+/* =========================================
+   FINAL
+========================================= */
+
+.final{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    text-align:center;
+
+    padding:30px;
+
+    background:
+        radial-gradient(
+            circle at center,
+            rgba(83,15,31,.17),
+            transparent 48%
+        ),
+        var(--black);
+}
+
+.final-content{
+    width:min(700px,100%);
+}
+
+.final-title{
+    margin-top:24px;
+
+    font-family:"Playfair Display","Noto Sans Georgian",serif;
+    font-size:clamp(56px,14vw,115px);
+    line-height:.95;
+    font-weight:400;
+    letter-spacing:-.045em;
+}
+
+.final-description{
+    margin-top:25px;
+
+    color:#bcb3b5;
+    font-size:13px;
+    line-height:2;
+}
+
+.final-signature{
+    margin-top:38px;
+
+    color:var(--gold2);
+    font-family:"Playfair Display","Noto Sans Georgian",serif;
+    font-size:23px;
+}
+
+.footer{
+    position:absolute;
+
+    left:0;
+    right:0;
+    bottom:max(23px,env(safe-area-inset-bottom));
+
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:8px;
+}
+
+.footer img{
+    width:35px;
+    height:35px;
+    object-fit:contain;
+    opacity:.8;
+}
+
+.footer-text{
+    color:#696164;
+    font-size:8px;
+    letter-spacing:.15em;
+}
+
+/* =========================================
+   DESKTOP
+========================================= */
+
+@media(min-width:800px){
+
+    .option-grid{
+        grid-template-columns:repeat(4,1fr);
+    }
+
+    .option-card{
+        min-height:105px;
+        flex-direction:column;
+        align-items:flex-start;
+        justify-content:space-between;
+    }
+
+    .option-index{
+        align-self:flex-end;
+    }
+
+    .choice-scroll{
+        padding-left:40px;
+        padding-right:40px;
+    }
+
+    .date-box{
+        padding:25px;
+    }
+
+    .day{
+        font-size:12px;
+    }
+}
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media(max-width:520px){
+
+    .intro-title{
+        font-size:clamp(38px,10.5vw,58px);
+    }
+
+    .intro-description{
+        font-size:12px;
+    }
+
+    .choice-header{
+        margin-bottom:34px;
+    }
+
+    .choice-block{
+        margin-bottom:31px;
+    }
+
+    .option-card{
+        min-height:68px;
+        padding:14px;
+    }
+
+    .option-name{
+        font-size:11px;
+    }
+
+    .date-box{
+        padding:15px;
+    }
+
+    .time-grid{
+        grid-template-columns:repeat(3,1fr);
+    }
+
+    .time-card{
+        height:50px;
+        font-size:11px;
+    }
+
+    .date-selected{
+        font-size:16px;
+    }
+}
+
+@media(max-height:670px){
+
+    .choice-header{
+        margin-bottom:25px;
+    }
+
+    .choice-block{
+        margin-bottom:25px;
+    }
+
+    .option-card{
+        min-height:60px;
+    }
+}
+
+@media(prefers-reduced-motion:reduce){
+
+    *,
+    *::before,
+    *::after{
+        animation-duration:.01ms!important;
+        animation-iteration-count:1!important;
+        transition-duration:.01ms!important;
+        scroll-behavior:auto!important;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="loader" id="loader">
+    <div class="loader-box">
+        <img src="logo.png" class="loader-logo" alt="DENI">
+        <div class="loader-line"></div>
+    </div>
+</div>
+
+<div class="ambient"></div>
+<div class="grain"></div>
+
+<main class="app">
+
+<!-- =================================================
+     SCENE 1
+================================================= -->
+
+<section class="scene intro active" id="scene1">
+
+    <div class="intro-content">
+
+        <div class="micro">
+            ერთი პატარა მოწვევა
+        </div>
+
+        <h1 class="intro-title">
+            მინდა, ერთი<br>
+            განსაკუთრებული საღამო<br>
+            შენთან ერთად გავატარო.
+        </h1>
+
+        <p class="intro-description">
+            და ამისთვის ერთი პატარა მოწვევა მაქვს…
+            იქნებ ამ საღამოს ჩემთან ერთად წამოხვიდე?
+        </p>
+
+        <button class="open-button" id="startBtn">
+            <span>მოწვევის გახსნა</span>
+            <span class="open-arrow">→</span>
+        </button>
+
+    </div>
+
+</section>
+
+
+<!-- =================================================
+     VIDEO 1
+================================================= -->
+
+<section class="scene video-scene" id="scene2">
+
+    <div class="video-wrap">
+
+        <video
+            class="video"
+            id="video1"
+            playsinline
+            muted
+            preload="auto"
+            webkit-playsinline
+            disablepictureinpicture
+            controlslist="nodownload noplaybackrate noremoteplayback"
+        >
+            <source src="vide1.mp4" type="video/mp4">
+        </video>
+
+        <div class="video-shade"></div>
+
+        <div class="video-title">
+            დაბრძანდი…
+        </div>
+
+        <div class="video-info">
+
+            <div class="video-number">
+                01 / 03
+            </div>
+
+            <div class="video-progress">
+                <span></span>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =================================================
+     INTERLUDE
+================================================= -->
+
+<section class="scene interlude" id="scene3">
+
+    <div class="interlude-content">
+
+        <div class="interlude-number">
+            02
+        </div>
+
+        <h2 class="interlude-title">
+            ამბის გაგრძელება…
+        </h2>
+
+        <p class="interlude-text">
+            ჯერ მხოლოდ ახლა იწყება.
+        </p>
+
+    </div>
+
+</section>
+
+
+<!-- =================================================
+     VIDEO 2
+================================================= -->
+
+<section class="scene video-scene" id="scene4">
+
+    <div class="video-wrap">
+
+        <video
+            class="video"
+            id="video2"
+            playsinline
+            muted
+            preload="auto"
+            webkit-playsinline
+            disablepictureinpicture
+            controlslist="nodownload noplaybackrate noremoteplayback"
+        >
+            <source src="vide2.mp4" type="video/mp4">
+        </video>
+
+        <div class="video-shade"></div>
+
+        <div class="video-title">
+            გზა უკვე დაიწყო.
+        </div>
+
+        <div class="video-info">
+
+            <div class="video-number">
+                02 / 03
+            </div>
+
+            <div class="video-progress">
+                <span></span>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =================================================
+     CHOICES
+================================================= -->
+
+<section class="scene choice-scene" id="scene5">
+
+    <div class="choice-scroll">
+
+        <div class="choice-container">
+
+            <header class="choice-header">
+
+                <div class="micro">
+                    შენი საღამო
+                </div>
+
+                <h2>
+                    ახლა შენ გადაწყვიტე.
+                </h2>
+
+                <p>
+                    დანარჩენი საღამო შენზეა.
+                </p>
+
+            </header>
+
+
+            <!-- DRINK -->
+
+            <div class="choice-block">
+
+                <div class="choice-block-head">
+
+                    <div class="choice-block-title">
+                        რას დალევ?
+                    </div>
+
+                    <div class="choice-block-number">
+                        01
+                    </div>
+
+                </div>
+
+                <div
+                    class="option-grid"
+                    data-group="drink"
+                >
+
+                    <button class="option-card" data-value="ღვინო">
+                        <span class="option-name">ღვინო</span>
+                        <span class="option-index">01</span>
+                    </button>
+
+                    <button class="option-card" data-value="კოქტეილი">
+                        <span class="option-name">კოქტეილი</span>
+                        <span class="option-index">02</span>
+                    </button>
+
+                    <button class="option-card" data-value="ლიმონათი">
+                        <span class="option-name">ლიმონათი</span>
+                        <span class="option-index">03</span>
+                    </button>
+
+                    <button class="option-card" data-value="წყალი">
+                        <span class="option-name">წყალი</span>
+                        <span class="option-index">04</span>
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- FOOD -->
+
+            <div class="choice-block">
+
+                <div class="choice-block-head">
+
+                    <div class="choice-block-title">
+                        რას მიირთმევ?
+                    </div>
+
+                    <div class="choice-block-number">
+                        02
+                    </div>
+
+                </div>
+
+                <div
+                    class="option-grid"
+                    data-group="food"
+                >
+
+                    <button class="option-card" data-value="სტეიკი">
+                        <span class="option-name">სტეიკი</span>
+                        <span class="option-index">01</span>
+                    </button>
+
+                    <button class="option-card" data-value="პასტა">
+                        <span class="option-name">პასტა</span>
+                        <span class="option-index">02</span>
+                    </button>
+
+                    <button class="option-card" data-value="სალათი">
+                        <span class="option-name">სალათი</span>
+                        <span class="option-index">03</span>
+                    </button>
+
+                    <button class="option-card" data-value="დესერტი">
+                        <span class="option-name">დესერტი</span>
+                        <span class="option-index">04</span>
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- DATE -->
+
+            <div class="choice-block">
+
+                <div class="choice-block-head">
+
+                    <div class="choice-block-title">
+                        რომელ დღეს?
+                    </div>
+
+                    <div class="choice-block-number">
+                        03
+                    </div>
+
+                </div>
+
+                <div class="date-box">
+
+                    <div class="date-top">
+
+                        <div
+                            class="date-selected"
+                            id="selectedDateText"
+                        >
+                            აირჩიე დღე
+                        </div>
+
+                        <div class="date-hint">
+                            DATE
+                        </div>
+
+                    </div>
+
+                    <div class="calendar-week">
+
+                        <div class="week-day">ორშ</div>
+                        <div class="week-day">სამ</div>
+                        <div class="week-day">ოთხ</div>
+                        <div class="week-day">ხუთ</div>
+                        <div class="week-day">პარ</div>
+                        <div class="week-day">შაბ</div>
+                        <div class="week-day">კვი</div>
+
+                    </div>
+
+                    <div
+                        class="calendar"
+                        id="calendar"
+                    ></div>
+
+                </div>
+
+            </div>
+
+
+            <!-- TIME -->
+
+            <div class="choice-block">
+
+                <div class="choice-block-head">
+
+                    <div class="choice-block-title">
+                        რომელ საათზე?
+                    </div>
+
+                    <div class="choice-block-number">
+                        04
+                    </div>
+
+                </div>
+
+                <div class="time-grid" id="timeGrid">
+
+                    <button class="time-card" data-time="18:00">
+                        18:00
+                    </button>
+
+                    <button class="time-card" data-time="18:30">
+                        18:30
+                    </button>
+
+                    <button class="time-card" data-time="19:00">
+                        19:00
+                    </button>
+
+                    <button class="time-card" data-time="19:30">
+                        19:30
+                    </button>
+
+                    <button class="time-card" data-time="20:00">
+                        20:00
+                    </button>
+
+                    <button class="time-card" data-time="20:30">
+                        20:30
+                    </button>
+
+                    <button class="time-card" data-time="21:00">
+                        21:00
+                    </button>
+
+                    <button class="time-card" data-time="21:30">
+                        21:30
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- ACTION -->
+
+            <div class="action-area">
+
+                <button
+                    class="continue-button"
+                    id="continueBtn"
+                >
+
+                    <span class="continue-inner">
+                        <span>გაგრძელება</span>
+                        <span class="continue-arrow">→</span>
+                    </span>
+
+                </button>
+
+                <div
+                    class="error"
+                    id="errorMessage"
+                ></div>
+
+                <div
+                    class="success"
+                    id="successMessage"
+                >
+                    არჩევანი მიღებულია.
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =================================================
+     VIDEO 3
+================================================= -->
+
+<section class="scene video-scene" id="scene6">
+
+    <div class="video-wrap">
+
+        <video
+            class="video"
+            id="video3"
+            playsinline
+            muted
+            preload="auto"
+            webkit-playsinline
+            disablepictureinpicture
+            controlslist="nodownload noplaybackrate noremoteplayback"
+        >
+            <source src="vide3.mp4" type="video/mp4">
+        </video>
+
+        <div class="video-shade"></div>
+
+        <div class="video-info">
+
+            <div class="video-number">
+                03 / 03
+            </div>
+
+            <div class="video-progress">
+                <span></span>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =================================================
+     FINAL
+================================================= -->
+
+<section class="scene final" id="scene7">
+
+    <div class="final-content">
+
+        <div class="micro">
+            საღამოს დასასრული
+        </div>
+
+        <h2 class="final-title">
+            გელოდები.
+        </h2>
+
+        <p class="final-description">
+            ამ საღამოს შენთან ერთად ველოდები.
+        </p>
+
+        <div class="final-signature">
+            — დემეტრე
+        </div>
+
+    </div>
+
+
+    <footer class="footer">
+
+        <img
+            src="logo.png"
+            alt="DENI"
+        >
+
+        <div class="footer-text">
+            შექმნილია დენის მიერ
+        </div>
+
+    </footer>
+
+</section>
+
+</main>
+
+
+<script>
+
+/* =====================================================
+   CONFIG
+===================================================== */
+
+const FORMSPREE_URL =
+    "PASTE_YOUR_FORMSPREE_LINK_HERE";
+
+
+/* =====================================================
+   ELEMENTS
+===================================================== */
+
+const loader =
+    document.getElementById("loader");
+
+const scene1 =
+    document.getElementById("scene1");
+
+const scene2 =
+    document.getElementById("scene2");
+
+const scene3 =
+    document.getElementById("scene3");
+
+const scene4 =
+    document.getElementById("scene4");
+
+const scene5 =
+    document.getElementById("scene5");
+
+const scene6 =
+    document.getElementById("scene6");
+
+const scene7 =
+    document.getElementById("scene7");
+
+const video1 =
+    document.getElementById("video1");
+
+const video2 =
+    document.getElementById("video2");
+
+const video3 =
+    document.getElementById("video3");
+
+const startBtn =
+    document.getElementById("startBtn");
+
+const continueBtn =
+    document.getElementById("continueBtn");
+
+const errorMessage =
+    document.getElementById("errorMessage");
+
+const successMessage =
+    document.getElementById("successMessage");
+
+const calendar =
+    document.getElementById("calendar");
+
+const selectedDateText =
+    document.getElementById("selectedDateText");
+
+
+/* =====================================================
+   STATE
+===================================================== */
+
+const state = {
+    drink:"",
+    food:"",
+    date:"",
+    time:"",
+    submitted:false
+};
+
+
+/* =====================================================
+   LOADER
+===================================================== */
+
+window.addEventListener("load",()=>{
+
+    setTimeout(()=>{
+
+        loader.classList.add("hide");
+
+    },700);
+
+});
+
+
+/* =====================================================
+   SCENE CONTROL
+===================================================== */
+
+function activateScene(scene){
+
+    document
+        .querySelectorAll(".scene")
+        .forEach(item=>{
+            item.classList.remove("active");
+        });
+
+    scene.classList.add("active");
+
+}
+
+
+/* =====================================================
+   SAFE VIDEO PLAY
+===================================================== */
+
+async function startVideo(video, scene){
+
+    activateScene(scene);
+
+    scene.classList.remove("playing");
+
+    try{
+
+        video.pause();
+
+    }catch(e){}
+
+    try{
+
+        video.currentTime = 0;
+
+    }catch(e){}
+
+
+    /*
+       Important:
+       force browser to prepare local MP4
+    */
+
+    try{
+
+        video.load();
+
+    }catch(e){}
+
+
+    const playNow = async()=>{
+
+        try{
+
+            video.muted = true;
+            video.playsInline = true;
+
+            await video.play();
+
+            scene.classList.add("playing");
+
+        }catch(error){
+
+            console.warn(
+                "Video autoplay was blocked:",
+                error
+            );
+
+            /*
+             * Try once more after a tiny delay.
+             */
+
+            setTimeout(async()=>{
+
+                try{
+
+                    await video.play();
+
+                    scene.classList.add("playing");
+
+                }catch(e){
+
+                    console.warn(
+                        "Second video play attempt failed.",
+                        e
+                    );
+
+                }
+
+            },120);
+
+        }
+
+    };
+
+
+    if(video.readyState >= 2){
+
+        await playNow();
+
+        return;
+
+    }
+
+
+    await new Promise(resolve=>{
+
+        let finished = false;
+
+        const finish = ()=>{
+
+            if(finished) return;
+
+            finished = true;
+
+            video.removeEventListener(
+                "canplay",
+                finish
+            );
+
+            video.removeEventListener(
+                "loadeddata",
+                finish
+            );
+
+            resolve();
+
+        };
+
+        video.addEventListener(
+            "canplay",
+            finish,
+            {once:true}
+        );
+
+        video.addEventListener(
+            "loadeddata",
+            finish,
+            {once:true}
+        );
+
+        setTimeout(
+            finish,
+            2500
+        );
+
+    });
+
+
+    await playNow();
+
+}
+
+
+/* =====================================================
+   INTRO → VIDEO 1
+===================================================== */
+
+startBtn.addEventListener("click",async()=>{
+
+    await startVideo(
+        video1,
+        scene2
+    );
+
+});
+
+
+/* =====================================================
+   VIDEO 1 → INTERLUDE
+===================================================== */
+
+video1.addEventListener("ended",()=>{
+
+    try{
+        video1.pause();
+    }catch(e){}
+
+    activateScene(scene3);
+
+    setTimeout(async()=>{
+
+        await startVideo(
+            video2,
+            scene4
+        );
+
+    },1500);
+
+});
+
+
+/* =====================================================
+   VIDEO 2 → CHOICES
+===================================================== */
+
+video2.addEventListener("ended",()=>{
+
+    try{
+        video2.pause();
+    }catch(e){}
+
+    activateScene(scene5);
+
+});
+
+
+/* =====================================================
+   OPTION SELECTION
+===================================================== */
+
+document
+.querySelectorAll(".option-grid")
+.forEach(group=>{
+
+    const groupName =
+        group.dataset.group;
+
+    group
+    .querySelectorAll(".option-card")
+    .forEach(card=>{
+
+        card.addEventListener("click",()=>{
+
+            group
+            .querySelectorAll(".option-card")
+            .forEach(item=>{
+                item.classList.remove("selected");
+            });
+
+            card.classList.add("selected");
+
+            state[groupName] =
+                card.dataset.value;
+
+            errorMessage.textContent = "";
+
+        });
+
+    });
+
+});
+
+
+/* =====================================================
+   CALENDAR
+===================================================== */
+
+const now = new Date();
+
+const currentYear =
+    now.getFullYear();
+
+const currentMonth =
+    now.getMonth();
+
+function createCalendar(){
+
+    calendar.innerHTML = "";
+
+    /*
+      Show current month and the next 5 months
+      through a small horizontal month system
+      using the current month initially.
+    */
+
+    const year = currentYear;
+    const month = currentMonth;
+
+    const firstDay =
+        new Date(year,month,1);
+
+    let start =
+        firstDay.getDay();
+
+    /*
+      Convert Sunday=0 to Monday=0
+    */
+
+    start =
+        start === 0
+        ? 6
+        : start - 1;
+
+    const days =
+        new Date(
+            year,
+            month + 1,
+            0
+        ).getDate();
+
+
+    for(let i=0;i<start;i++){
+
+        const empty =
+            document.createElement("div");
+
+        empty.className =
+            "day empty";
+
+        calendar.appendChild(empty);
+
+    }
+
+
+    for(let day=1;day<=days;day++){
+
+        const button =
+            document.createElement("button");
+
+        button.className =
+            "day";
+
+        button.type =
+            "button";
+
+        button.textContent =
+            day;
+
+
+        const date =
+            new Date(
+                year,
+                month,
+                day
+            );
+
+
+        const iso =
+            [
+                year,
+                String(month+1).padStart(2,"0"),
+                String(day).padStart(2,"0")
+            ].join("-");
+
+
+        if(
+            date.getDate() === now.getDate() &&
+            date.getMonth() === now.getMonth() &&
+            date.getFullYear() === now.getFullYear()
+        ){
+
+            button.classList.add("today");
+
+        }
+
+
+        button.addEventListener("click",()=>{
+
+            calendar
+            .querySelectorAll(".day")
+            .forEach(item=>{
+                item.classList.remove("selected");
+            });
+
+            button.classList.add("selected");
+
+            state.date = iso;
+
+            selectedDateText.textContent =
+                formatDate(iso);
+
+            errorMessage.textContent = "";
+
+        });
+
+
+        calendar.appendChild(button);
+
+    }
+
+}
+
+createCalendar();
+
+
+/* =====================================================
+   DATE FORMAT
+===================================================== */
+
+function formatDate(value){
+
+    if(!value){
+        return "";
+    }
+
+    const parts =
+        value.split("-");
+
+    if(parts.length !== 3){
+        return value;
+    }
+
+    return `${parts[2]}.${parts[1]}.${parts[0]}`;
+
+}
+
+
+/* =====================================================
+   TIME
+===================================================== */
+
+document
+.querySelectorAll(".time-card")
+.forEach(button=>{
+
+    button.addEventListener("click",()=>{
+
+        document
+        .querySelectorAll(".time-card")
+        .forEach(item=>{
+            item.classList.remove("selected");
+        });
+
+        button.classList.add("selected");
+
+        state.time =
+            button.dataset.time;
+
+        errorMessage.textContent = "";
+
+    });
+
+});
+
+
+/* =====================================================
+   VALIDATION
+===================================================== */
+
+function validate(){
+
+    if(!state.drink){
+        return "ჯერ აირჩიე, რას დალევ.";
+    }
+
+    if(!state.food){
+        return "ჯერ აირჩიე, რას მიირთმევ.";
+    }
+
+    if(!state.date){
+        return "აირჩიე სასურველი დღე.";
+    }
+
+    if(!state.time){
+        return "აირჩიე სასურველი საათი.";
+    }
+
+    return "";
+
+}
+
+
+/* =====================================================
+   FORMSPREE
+===================================================== */
+
+async function submitForm(){
+
+    /*
+      If URL has not been entered yet,
+      allow local testing to continue.
+    */
+
+    if(
+        !FORMSPREE_URL ||
+        FORMSPREE_URL.includes(
+            "PASTE_YOUR_FORMSPREE_LINK_HERE"
+        )
+    ){
+
+        console.warn(
+            "Formspree URL has not been configured."
+        );
+
+        return true;
+
+    }
+
+
+    const message = `
+ახალი პასუხი მოსაწვევიდან
+
+━━━━━━━━━━━━━━━━━━
+
+🥂 სასმელი:
+${state.drink}
+
+🍽️ საჭმელი:
+${state.food}
+
+📅 თარიღი:
+${formatDate(state.date)}
+
+🕐 საათი:
+${state.time}
+
+━━━━━━━━━━━━━━━━━━
+`.trim();
+
+
+    const form =
+        new FormData();
+
+    form.append(
+        "message",
+        message
+    );
+
+    form.append(
+        "drink",
+        state.drink
+    );
+
+    form.append(
+        "food",
+        state.food
+    );
+
+    form.append(
+        "date",
+        formatDate(state.date)
+    );
+
+    form.append(
+        "time",
+        state.time
+    );
+
+
+    const response =
+        await fetch(
+            FORMSPREE_URL,
+            {
+                method:"POST",
+                body:form,
+                headers:{
+                    "Accept":"application/json"
+                }
+            }
+        );
+
+
+    if(!response.ok){
+
+        throw new Error(
+            "Formspree request failed."
+        );
+
+    }
+
+    return true;
+
+}
+
+
+/* =====================================================
+   CHOICES → VIDEO 3
+===================================================== */
+
+continueBtn.addEventListener(
+    "click",
+    async()=>{
+
+        errorMessage.textContent = "";
+
+        const error =
+            validate();
+
+        if(error){
+
+            errorMessage.textContent =
+                error;
+
+            return;
+
+        }
+
+
+        if(state.submitted){
+
+            await startVideo(
+                video3,
+                scene6
+            );
+
+            return;
+
+        }
+
+
+        continueBtn.disabled = true;
+
+        continueBtn.innerHTML = `
+            <span class="continue-inner">
+                <span>იგზავნება…</span>
+            </span>
+        `;
+
+
+        try{
+
+            await submitForm();
+
+            state.submitted = true;
+
+            successMessage.style.display =
+                "block";
+
+
+            /*
+               Wait a tiny amount so the
+               selection scene does not
+               disappear abruptly.
+            */
+
+            setTimeout(async()=>{
+
+                await startVideo(
+                    video3,
+                    scene6
+                );
+
+            },500);
+
+
+        }catch(error){
+
+            console.error(error);
+
+            errorMessage.textContent =
+                "გაგზავნა ვერ მოხერხდა. სცადე თავიდან.";
+
+            continueBtn.disabled = false;
+
+            continueBtn.innerHTML = `
+                <span class="continue-inner">
+                    <span>გაგრძელება</span>
+                    <span class="continue-arrow">→</span>
+                </span>
+            `;
+
+        }
+
+    }
+);
+
+
+/* =====================================================
+   VIDEO 3 → FINAL
+===================================================== */
+
+video3.addEventListener("ended",()=>{
+
+    try{
+        video3.pause();
+    }catch(e){}
+
+    activateScene(scene7);
+
+});
+
+
+/* =====================================================
+   PRELOAD
+===================================================== */
+
+function preloadVideo(video){
+
+    try{
+
+        video.preload = "auto";
+        video.load();
+
+    }catch(e){
+
+        console.warn(
+            "Preload failed:",
+            e
+        );
+
+    }
+
+}
+
+preloadVideo(video1);
+preloadVideo(video2);
+preloadVideo(video3);
+
+
+/* =====================================================
+   PREVENT CONTEXT MENU ON VIDEOS
+===================================================== */
+
+[video1,video2,video3]
+.forEach(video=>{
+
+    video.addEventListener(
+        "contextmenu",
+        event=>{
+            event.preventDefault();
+        }
+    );
+
+});
+
+
+/* =====================================================
+   PREVENT PAGE SCROLL OUTSIDE CHOICE SCREEN
+===================================================== */
+
+document.addEventListener(
+    "touchmove",
+    event=>{
+
+        if(!scene5.classList.contains("active")){
+
+            event.preventDefault();
+
+        }
+
+    },
+    {passive:false}
+);
+
+</script>
+
+</body>
+</html>
