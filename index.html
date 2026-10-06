@@ -13,19 +13,19 @@
 
 <style>
 :root{
-    --black:#070607;
-    --black2:#0c090b;
-    --wine:#4a0e1b;
-    --wine2:#681728;
-    --red:#8b2438;
-    --gold:#c8a36a;
-    --gold2:#e4ca99;
-    --cream:#f5efe7;
-    --muted:#9d9396;
-    --muted2:#70676a;
-    --line:rgba(220,185,125,.22);
-    --whiteLine:rgba(255,255,255,.10);
-    --ease:cubic-bezier(.22,.75,.2,1);
+    --bg:#080608;
+    --bg2:#0d090b;
+    --wine:#4b101d;
+    --wine2:#68182a;
+    --wine3:#8a253b;
+    --gold:#c9a66b;
+    --gold2:#e6cb98;
+    --cream:#f7f0e8;
+    --muted:#aaa0a2;
+    --muted2:#70686b;
+    --line:rgba(201,166,107,.25);
+    --white-line:rgba(255,255,255,.10);
+    --ease:cubic-bezier(.22,.78,.18,1);
 }
 
 *{
@@ -36,15 +36,14 @@
 }
 
 html{
-    background:var(--black);
-    scroll-behavior:smooth;
+    background:var(--bg);
 }
 
 body{
     width:100%;
-    height:100%;
+    min-height:100vh;
     overflow:hidden;
-    background:var(--black);
+    background:var(--bg);
     color:var(--cream);
     font-family:"Noto Sans Georgian",sans-serif;
 }
@@ -55,6 +54,7 @@ input{
 }
 
 button{
+    border:0;
     cursor:pointer;
 }
 
@@ -64,12 +64,12 @@ button{
     height:100dvh;
     min-height:100svh;
     overflow:hidden;
-    background:var(--black);
+    background:var(--bg);
 }
 
-/* =========================================
+/* =========================================================
    LOADER
-========================================= */
+========================================================= */
 
 .loader{
     position:fixed;
@@ -78,10 +78,8 @@ button{
     display:flex;
     align-items:center;
     justify-content:center;
-    background:#070607;
-    transition:
-        opacity .9s ease,
-        visibility .9s ease;
+    background:#070507;
+    transition:opacity .9s ease, visibility .9s ease;
 }
 
 .loader.hide{
@@ -89,53 +87,51 @@ button{
     visibility:hidden;
 }
 
-.loader-box{
+.loader-content{
     display:flex;
     flex-direction:column;
     align-items:center;
 }
 
 .loader-logo{
-    width:52px;
-    height:52px;
+    width:48px;
+    height:48px;
     object-fit:contain;
-    margin-bottom:22px;
-    opacity:.82;
+    opacity:.8;
+    margin-bottom:20px;
 }
 
 .loader-line{
-    position:relative;
-    width:75px;
+    width:70px;
     height:1px;
-    background:rgba(200,163,106,.18);
+    background:rgba(201,166,107,.18);
     overflow:hidden;
 }
 
 .loader-line::after{
     content:"";
-    position:absolute;
-    left:-40%;
-    top:0;
-    width:40%;
+    display:block;
+    width:35%;
     height:100%;
     background:var(--gold);
-    animation:loaderMove 1.2s infinite ease-in-out;
+    animation:loader 1.2s infinite ease-in-out;
 }
 
-@keyframes loaderMove{
-    from{left:-40%}
-    to{left:100%}
+@keyframes loader{
+    from{transform:translateX(-140%)}
+    to{transform:translateX(400%)}
 }
 
-/* =========================================
+/* =========================================================
    ATMOSPHERE
-========================================= */
+========================================================= */
 
 .ambient{
     position:fixed;
     inset:0;
+    z-index:100;
     pointer-events:none;
-    z-index:50;
+    overflow:hidden;
 }
 
 .ambient::before{
@@ -144,24 +140,24 @@ button{
     width:900px;
     height:900px;
     left:-500px;
-    top:-400px;
+    top:-500px;
     background:radial-gradient(
         circle,
-        rgba(100,17,37,.18),
-        transparent 67%
+        rgba(106,19,40,.18),
+        transparent 68%
     );
 }
 
 .ambient::after{
     content:"";
     position:absolute;
-    width:700px;
-    height:700px;
-    right:-400px;
-    bottom:-400px;
+    width:800px;
+    height:800px;
+    right:-500px;
+    bottom:-500px;
     background:radial-gradient(
         circle,
-        rgba(200,163,106,.07),
+        rgba(201,166,107,.07),
         transparent 68%
     );
 }
@@ -169,15 +165,15 @@ button{
 .grain{
     position:fixed;
     inset:0;
-    z-index:900;
+    z-index:950;
     pointer-events:none;
     opacity:.025;
-    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.8'/%3E%3C/svg%3E");
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
-/* =========================================
-   SCENE SYSTEM
-========================================= */
+/* =========================================================
+   SCENES
+========================================================= */
 
 .scene{
     position:absolute;
@@ -190,12 +186,12 @@ button{
     visibility:hidden;
     pointer-events:none;
 
-    transform:scale(1.025);
+    transform:scale(1.02);
 
     transition:
-        opacity .85s var(--ease),
-        transform 1.15s var(--ease),
-        visibility .85s;
+        opacity .8s var(--ease),
+        transform 1s var(--ease),
+        visibility .8s;
 }
 
 .scene.active{
@@ -205,43 +201,42 @@ button{
     transform:scale(1);
 }
 
-/* =========================================
+/* =========================================================
    INTRO
-========================================= */
+========================================================= */
 
 .intro{
     display:flex;
     align-items:center;
     justify-content:center;
+    text-align:center;
     padding:
         max(35px,env(safe-area-inset-top))
         25px
         max(35px,env(safe-area-inset-bottom));
-    text-align:center;
+
     background:
         radial-gradient(
-            circle at 50% 45%,
-            rgba(83,15,30,.15),
+            circle at 50% 42%,
+            rgba(89,17,35,.14),
             transparent 48%
         ),
-        var(--black);
+        var(--bg);
 }
 
 .intro-content{
-    position:relative;
-    z-index:5;
-    width:min(760px,100%);
+    width:min(700px,100%);
 }
 
-.micro{
+.kicker{
     display:flex;
-    align-items:center;
     justify-content:center;
+    align-items:center;
     gap:13px;
 
     color:var(--gold2);
     font-size:9px;
-    letter-spacing:.34em;
+    letter-spacing:.3em;
 
     opacity:0;
     transform:translateY(15px);
@@ -251,30 +246,30 @@ button{
         transform .9s .1s var(--ease);
 }
 
-.micro::before,
-.micro::after{
+.kicker::before,
+.kicker::after{
     content:"";
     width:30px;
     height:1px;
     background:var(--line);
 }
 
-.scene.active .micro{
+.scene.active .kicker{
     opacity:1;
     transform:none;
 }
 
 .intro-title{
-    margin-top:28px;
+    margin-top:27px;
 
     font-family:"Playfair Display","Noto Sans Georgian",serif;
-    font-size:clamp(42px,9vw,86px);
-    line-height:1.08;
+    font-size:clamp(40px,9vw,78px);
+    line-height:1.12;
     font-weight:400;
-    letter-spacing:-.035em;
+    letter-spacing:-.03em;
 
     opacity:0;
-    transform:translateY(25px);
+    transform:translateY(24px);
 
     transition:
         opacity 1s .25s var(--ease),
@@ -286,43 +281,42 @@ button{
     transform:none;
 }
 
-.intro-description{
-    max-width:580px;
-    margin:25px auto 39px;
+.intro-text{
+    max-width:540px;
+    margin:23px auto 34px;
 
-    color:#bcb3b5;
+    color:#bdb4b6;
     font-size:14px;
     line-height:2;
 
     opacity:0;
-    transform:translateY(20px);
+    transform:translateY(18px);
 
     transition:
         opacity .9s .55s var(--ease),
         transform .9s .55s var(--ease);
 }
 
-.scene.active .intro-description{
+.scene.active .intro-text{
     opacity:1;
     transform:none;
 }
 
-.open-button{
+.intro-button{
     position:relative;
 
     display:inline-flex;
     align-items:center;
     justify-content:center;
-    gap:18px;
+    gap:17px;
 
-    min-width:195px;
+    min-width:205px;
     height:54px;
     padding:0 25px;
 
     color:#fff;
     background:rgba(255,255,255,.025);
-
-    border:1px solid rgba(200,163,106,.35);
+    border:1px solid rgba(201,166,107,.4);
 
     overflow:hidden;
 
@@ -336,44 +330,44 @@ button{
         border-color .3s ease;
 }
 
-.scene.active .open-button{
+.scene.active .intro-button{
     opacity:1;
     transform:none;
 }
 
-.open-button::before{
+.intro-button::before{
     content:"";
     position:absolute;
     inset:0;
 
     background:linear-gradient(
         110deg,
-        transparent 25%,
-        rgba(255,255,255,.08) 50%,
-        transparent 75%
+        transparent 20%,
+        rgba(255,255,255,.1) 50%,
+        transparent 80%
     );
 
     transform:translateX(-120%);
     transition:transform .8s ease;
 }
 
-.open-button:hover::before{
+.intro-button:hover::before{
     transform:translateX(120%);
 }
 
-.open-button:hover{
-    border-color:rgba(200,163,106,.7);
-    background:rgba(200,163,106,.06);
+.intro-button:hover{
+    background:rgba(201,166,107,.06);
+    border-color:rgba(201,166,107,.7);
 }
 
-.open-arrow{
+.arrow{
     color:var(--gold2);
     font-size:20px;
 }
 
-/* =========================================
+/* =========================================================
    VIDEO
-========================================= */
+========================================================= */
 
 .video-scene{
     background:#020202;
@@ -382,8 +376,8 @@ button{
 .video-wrap{
     position:absolute;
     inset:0;
-    overflow:hidden;
     background:#020202;
+    overflow:hidden;
 }
 
 .video{
@@ -399,7 +393,7 @@ button{
     background:#020202;
 }
 
-.video-shade{
+.video-overlay{
     position:absolute;
     inset:0;
     pointer-events:none;
@@ -407,46 +401,42 @@ button{
     background:
         linear-gradient(
             180deg,
-            rgba(0,0,0,.54) 0%,
-            rgba(0,0,0,.08) 35%,
-            rgba(0,0,0,.05) 55%,
-            rgba(0,0,0,.66) 100%
+            rgba(0,0,0,.52),
+            rgba(0,0,0,.04) 38%,
+            rgba(0,0,0,.08) 62%,
+            rgba(0,0,0,.68)
         );
 }
 
 .video-title{
     position:absolute;
-    top:max(34px,env(safe-area-inset-top));
+    top:max(35px,env(safe-area-inset-top));
     left:0;
     right:0;
 
     display:flex;
     justify-content:center;
+    align-items:center;
 
     z-index:3;
 
     color:#fff;
     font-size:12px;
-    font-weight:400;
-    letter-spacing:.08em;
-
     text-shadow:0 2px 20px rgba(0,0,0,.8);
 }
 
 .video-title::before{
     content:"";
-    width:27px;
+    width:28px;
     height:1px;
-    margin:auto 11px auto 0;
-
-    background:rgba(255,255,255,.65);
+    margin-right:11px;
+    background:rgba(255,255,255,.6);
 }
 
 .video-info{
     position:absolute;
-
-    left:24px;
-    right:24px;
+    left:25px;
+    right:25px;
     bottom:max(32px,env(safe-area-inset-bottom));
 
     display:flex;
@@ -459,11 +449,11 @@ button{
 .video-number{
     color:rgba(255,255,255,.7);
     font-size:9px;
-    letter-spacing:.3em;
+    letter-spacing:.28em;
 }
 
 .video-progress{
-    width:100px;
+    width:105px;
     height:1px;
     background:rgba(255,255,255,.25);
     overflow:hidden;
@@ -477,72 +467,72 @@ button{
 }
 
 .video-scene.playing .video-progress span{
-    animation:fiveSeconds 5s linear forwards;
+    animation:videoProgress 5s linear forwards;
 }
 
-@keyframes fiveSeconds{
+@keyframes videoProgress{
     from{width:0}
     to{width:100%}
 }
 
-/* =========================================
+/* =========================================================
    INTERLUDE
-========================================= */
+========================================================= */
 
 .interlude{
     display:flex;
     align-items:center;
     justify-content:center;
-
     text-align:center;
+
     padding:30px;
 
     background:
         radial-gradient(
-            circle at center,
-            rgba(91,17,34,.16),
+            circle,
+            rgba(91,17,35,.14),
             transparent 50%
         ),
-        var(--black);
+        var(--bg);
 }
 
 .interlude-content{
-    width:min(720px,100%);
+    width:min(700px,100%);
 }
 
 .interlude-number{
     color:var(--gold);
     font-size:9px;
-    letter-spacing:.35em;
+    letter-spacing:.4em;
     margin-bottom:25px;
 }
 
 .interlude-title{
     font-family:"Playfair Display","Noto Sans Georgian",serif;
-    font-size:clamp(37px,8vw,72px);
-    line-height:1.1;
     font-weight:400;
-    margin-bottom:18px;
+    font-size:clamp(38px,8vw,70px);
+    line-height:1.1;
 }
 
 .interlude-text{
+    margin-top:18px;
     color:var(--muted);
     font-size:13px;
     line-height:2;
 }
 
-/* =========================================
-   CHOICE SCENE
-========================================= */
+/* =========================================================
+   CHOICE SCENES
+========================================================= */
 
 .choice-scene{
     background:
         radial-gradient(
             circle at 50% 0%,
-            rgba(90,16,34,.12),
-            transparent 42%
+            rgba(92,17,35,.14),
+            transparent 45%
         ),
-        var(--black);
+        var(--bg);
 }
 
 .choice-scroll{
@@ -553,9 +543,9 @@ button{
     overflow-x:hidden;
 
     padding:
-        max(55px,env(safe-area-inset-top))
+        max(50px,env(safe-area-inset-top))
         20px
-        max(70px,env(safe-area-inset-bottom));
+        max(60px,env(safe-area-inset-bottom));
 
     -webkit-overflow-scrolling:touch;
     overscroll-behavior:contain;
@@ -563,396 +553,385 @@ button{
 
 .choice-container{
     width:min(820px,100%);
-    margin:auto;
+    margin:0 auto;
 }
 
 .choice-header{
     text-align:center;
-    margin-bottom:45px;
-}
-
-.choice-header .micro{
-    opacity:1;
-    transform:none;
-}
-
-.choice-header h2{
-    margin-top:22px;
-
-    font-family:"Playfair Display","Noto Sans Georgian",serif;
-    font-size:clamp(39px,8vw,68px);
-    line-height:1.1;
-    font-weight:400;
-    letter-spacing:-.025em;
-}
-
-.choice-header p{
-    margin-top:15px;
-
-    color:var(--muted);
-    font-size:13px;
-}
-
-/* =========================================
-   CHOICE BLOCK
-========================================= */
-
-.choice-block{
     margin-bottom:38px;
 }
 
-.choice-block-head{
-    display:flex;
-    align-items:end;
-    justify-content:space-between;
-
-    margin-bottom:13px;
-}
-
-.choice-block-title{
-    color:#eee7e1;
-    font-size:14px;
-    font-weight:500;
-}
-
-.choice-block-number{
-    color:#62595c;
+.step-counter{
+    color:var(--gold);
     font-size:9px;
-    letter-spacing:.25em;
+    letter-spacing:.3em;
 }
 
-.option-grid{
+.choice-title{
+    margin-top:20px;
+
+    font-family:"Playfair Display","Noto Sans Georgian",serif;
+    font-weight:400;
+    font-size:clamp(40px,9vw,70px);
+    line-height:1.08;
+}
+
+.choice-subtitle{
+    margin-top:13px;
+    color:var(--muted);
+    font-size:13px;
+    line-height:1.8;
+}
+
+.options{
     display:grid;
     grid-template-columns:repeat(2,1fr);
-    gap:9px;
+    gap:10px;
 }
 
-.option-card{
+.option{
     position:relative;
 
-    min-height:76px;
+    min-height:82px;
+    padding:17px;
 
     display:flex;
-    align-items:center;
+    align-items:flex-end;
     justify-content:space-between;
 
-    padding:16px 17px;
+    text-align:left;
 
-    color:#d2cbcb;
+    color:#d7d0d1;
 
     background:
         linear-gradient(
-            135deg,
+            145deg,
             rgba(255,255,255,.045),
             rgba(255,255,255,.015)
         );
 
-    border:1px solid rgba(255,255,255,.085);
+    border:1px solid rgba(255,255,255,.09);
 
     transition:
-        border-color .3s ease,
-        background .3s ease,
-        transform .25s ease,
-        box-shadow .3s ease;
+        .3s ease;
 }
 
-.option-card::after{
+.option:hover{
+    border-color:rgba(201,166,107,.4);
+    transform:translateY(-2px);
+}
+
+.option.selected{
+    color:#fff;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(105,22,42,.34),
+            rgba(65,10,24,.12)
+        );
+
+    border-color:rgba(201,166,107,.75);
+
+    box-shadow:
+        0 12px 35px rgba(0,0,0,.25);
+}
+
+.option.selected::before{
     content:"";
     position:absolute;
     left:0;
     top:0;
     bottom:0;
-
     width:2px;
-
     background:var(--gold);
-
-    opacity:0;
-
-    transition:opacity .3s ease;
-}
-
-.option-card:hover{
-    border-color:rgba(200,163,106,.38);
-}
-
-.option-card:active{
-    transform:scale(.985);
-}
-
-.option-card.selected{
-    color:#fff;
-
-    background:
-        linear-gradient(
-            135deg,
-            rgba(105,20,39,.28),
-            rgba(61,11,22,.13)
-        );
-
-    border-color:rgba(200,163,106,.72);
-
-    box-shadow:
-        0 10px 35px rgba(0,0,0,.22),
-        inset 0 0 30px rgba(120,20,42,.06);
-}
-
-.option-card.selected::after{
-    opacity:1;
 }
 
 .option-name{
     font-size:12px;
 }
 
-.option-index{
-    color:#665d60;
+.option-number{
+    color:#655d60;
     font-size:9px;
+    letter-spacing:.15em;
 }
 
-.option-card.selected .option-index{
+.option.selected .option-number{
     color:var(--gold2);
 }
 
-/* =========================================
-   DATE + TIME
-========================================= */
-
-.date-box{
-    position:relative;
-
-    padding:19px;
-
-    background:
-        linear-gradient(
-            145deg,
-            rgba(255,255,255,.04),
-            rgba(255,255,255,.015)
-        );
-
-    border:1px solid rgba(255,255,255,.085);
-}
-
-.date-top{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-
-    margin-bottom:15px;
-}
-
-.date-selected{
-    color:var(--gold2);
-    font-family:"Playfair Display",serif;
-    font-size:18px;
-}
-
-.date-hint{
-    color:#655c5f;
-    font-size:9px;
-    letter-spacing:.12em;
-}
-
-.calendar-week{
-    display:grid;
-    grid-template-columns:repeat(7,1fr);
-    gap:5px;
-
-    margin-bottom:8px;
-}
-
-.week-day{
-    text-align:center;
-    color:#625a5c;
-    font-size:8px;
-    padding-bottom:5px;
-}
-
-.calendar{
-    display:grid;
-    grid-template-columns:repeat(7,1fr);
-    gap:5px;
-}
-
-.day{
-    min-width:0;
-    aspect-ratio:1 / 1;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    color:#bdb5b6;
-    background:rgba(255,255,255,.018);
-    border:1px solid transparent;
-
-    font-size:11px;
-
-    transition:
-        background .25s ease,
-        border-color .25s ease,
-        color .25s ease,
-        transform .2s ease;
-}
-
-.day.empty{
-    background:transparent;
-    pointer-events:none;
-}
-
-.day:not(.empty):hover{
-    border-color:rgba(200,163,106,.35);
-}
-
-.day.selected{
-    color:#fff;
-    background:var(--wine2);
-    border-color:rgba(200,163,106,.8);
-    box-shadow:0 7px 20px rgba(80,10,25,.35);
-}
-
-.day.today{
-    color:var(--gold2);
-}
-
-.day:active{
-    transform:scale(.93);
-}
-
-.time-grid{
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:8px;
-}
-
-.time-card{
-    height:54px;
-
-    color:#bbb3b4;
-    background:rgba(255,255,255,.025);
-
-    border:1px solid rgba(255,255,255,.085);
-
-    transition:
-        border-color .25s ease,
-        background .25s ease,
-        color .25s ease,
-        transform .2s ease;
-}
-
-.time-card:hover{
-    border-color:rgba(200,163,106,.4);
-}
-
-.time-card.selected{
-    color:#fff;
-    background:rgba(105,20,39,.25);
-    border-color:rgba(200,163,106,.72);
-}
-
-.time-card:active{
-    transform:scale(.96);
-}
-
-/* =========================================
-   CONTINUE
-========================================= */
-
-.action-area{
-    padding-top:5px;
-    padding-bottom:20px;
+.next-area{
+    margin-top:25px;
     text-align:center;
 }
 
-.continue-button{
-    position:relative;
-
+.next-button{
     width:100%;
-    height:62px;
-
-    overflow:hidden;
+    height:58px;
 
     color:#fff;
 
     background:
         linear-gradient(
             110deg,
-            #4c101d,
-            #741c30
+            #4d101e,
+            #731c30
         );
 
-    border:1px solid rgba(200,163,106,.4);
+    border:1px solid rgba(201,166,107,.4);
 
     transition:
         transform .25s ease,
-        filter .25s ease,
         opacity .25s ease;
 }
 
-.continue-button::before{
-    content:"";
-    position:absolute;
-    inset:0;
-
-    background:linear-gradient(
-        110deg,
-        transparent 20%,
-        rgba(255,255,255,.12) 50%,
-        transparent 80%
-    );
-
-    transform:translateX(-120%);
-    transition:transform .8s ease;
-}
-
-.continue-button:hover::before{
-    transform:translateX(120%);
-}
-
-.continue-button:active{
+.next-button:active{
     transform:scale(.985);
 }
 
-.continue-button:disabled{
-    opacity:.45;
+.next-button:disabled{
+    opacity:.4;
     cursor:not-allowed;
 }
 
-.continue-inner{
-    position:relative;
-    z-index:2;
+.next-content{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:17px;
+}
+
+.next-arrow{
+    color:var(--gold2);
+    font-size:20px;
+}
+
+/* =========================================================
+   DATE
+========================================================= */
+
+.calendar-box{
+    padding:18px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,.04),
+            rgba(255,255,255,.012)
+        );
+
+    border:1px solid rgba(255,255,255,.09);
+}
+
+.calendar-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:18px;
+}
+
+.month-name{
+    color:var(--gold2);
+    font-family:"Playfair Display",serif;
+    font-size:21px;
+}
+
+.calendar-caption{
+    color:#625a5d;
+    font-size:9px;
+    letter-spacing:.15em;
+}
+
+.weekdays{
+    display:grid;
+    grid-template-columns:repeat(7,1fr);
+    gap:5px;
+    margin-bottom:7px;
+}
+
+.weekday{
+    text-align:center;
+    color:#625b5d;
+    font-size:8px;
+    padding-bottom:5px;
+}
+
+.days{
+    display:grid;
+    grid-template-columns:repeat(7,1fr);
+    gap:5px;
+}
+
+.day{
+    aspect-ratio:1;
 
     display:flex;
     align-items:center;
     justify-content:center;
-    gap:18px;
 
-    font-size:13px;
+    color:#c0b8b9;
+    background:rgba(255,255,255,.018);
+
+    border:1px solid transparent;
+
+    font-size:11px;
+
+    transition:.25s ease;
 }
 
-.continue-arrow{
-    font-size:19px;
-    color:var(--gold2);
+.day.empty{
+    background:transparent;
+}
+
+.day:not(.empty):hover{
+    border-color:rgba(201,166,107,.4);
+}
+
+.day.selected{
+    color:#fff;
+    background:var(--wine2);
+    border-color:rgba(201,166,107,.8);
+    box-shadow:0 8px 25px rgba(80,10,25,.35);
+}
+
+.day.disabled{
+    color:#4a4446;
+    pointer-events:none;
+}
+
+/* =========================================================
+   TIME
+========================================================= */
+
+.time-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:9px;
+}
+
+.time{
+    height:58px;
+
+    color:#bdb5b6;
+    background:rgba(255,255,255,.025);
+    border:1px solid rgba(255,255,255,.09);
+
+    transition:.25s ease;
+}
+
+.time:hover{
+    border-color:rgba(201,166,107,.4);
+}
+
+.time.selected{
+    color:#fff;
+    background:rgba(105,20,42,.3);
+    border-color:rgba(201,166,107,.75);
+}
+
+/* =========================================================
+   SUMMARY
+========================================================= */
+
+.summary-card{
+    padding:25px 20px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,.045),
+            rgba(255,255,255,.012)
+        );
+
+    border:1px solid rgba(201,166,107,.25);
+}
+
+.summary-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    padding-bottom:18px;
+    border-bottom:1px solid rgba(255,255,255,.08);
+}
+
+.summary-title{
+    font-family:"Playfair Display",serif;
+    font-size:26px;
+}
+
+.summary-label{
+    color:var(--gold);
+    font-size:8px;
+    letter-spacing:.25em;
+}
+
+.summary-list{
+    margin-top:20px;
+}
+
+.summary-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+
+    padding:13px 0;
+
+    border-bottom:1px solid rgba(255,255,255,.06);
+}
+
+.summary-row:last-child{
+    border-bottom:0;
+}
+
+.summary-key{
+    color:#756d70;
+    font-size:10px;
+}
+
+.summary-value{
+    max-width:55%;
+    text-align:right;
+    color:#eee8e3;
+    font-size:12px;
+}
+
+.confirm-button{
+    width:100%;
+    height:62px;
+
+    margin-top:18px;
+
+    color:#fff;
+    background:
+        linear-gradient(
+            110deg,
+            #4d101e,
+            #7c2033
+        );
+
+    border:1px solid rgba(201,166,107,.45);
+}
+
+.confirm-button:disabled{
+    opacity:.5;
+    cursor:not-allowed;
 }
 
 .error{
-    min-height:25px;
-    margin-top:13px;
+    min-height:23px;
+    margin-top:12px;
 
-    color:#c77988;
+    text-align:center;
+
+    color:#cf7d8c;
     font-size:10px;
 }
 
-.success{
-    display:none;
-
-    color:var(--gold2);
-    font-size:10px;
-}
-
-/* =========================================
+/* =========================================================
    FINAL
-========================================= */
+========================================================= */
 
 .final{
     display:flex;
@@ -960,16 +939,15 @@ button{
     justify-content:center;
 
     text-align:center;
-
     padding:30px;
 
     background:
         radial-gradient(
             circle at center,
-            rgba(83,15,31,.17),
-            transparent 48%
+            rgba(86,16,34,.18),
+            transparent 50%
         ),
-        var(--black);
+        var(--bg);
 }
 
 .final-content{
@@ -977,26 +955,24 @@ button{
 }
 
 .final-title{
-    margin-top:24px;
+    margin-top:25px;
 
     font-family:"Playfair Display","Noto Sans Georgian",serif;
-    font-size:clamp(56px,14vw,115px);
+    font-size:clamp(58px,14vw,115px);
     line-height:.95;
     font-weight:400;
     letter-spacing:-.045em;
 }
 
-.final-description{
-    margin-top:25px;
-
-    color:#bcb3b5;
+.final-text{
+    margin-top:24px;
+    color:#bbb2b4;
     font-size:13px;
     line-height:2;
 }
 
-.final-signature{
+.signature{
     margin-top:38px;
-
     color:var(--gold2);
     font-family:"Playfair Display","Noto Sans Georgian",serif;
     font-size:23px;
@@ -1004,7 +980,6 @@ button{
 
 .footer{
     position:absolute;
-
     left:0;
     right:0;
     bottom:max(23px,env(safe-area-inset-bottom));
@@ -1019,53 +994,50 @@ button{
     width:35px;
     height:35px;
     object-fit:contain;
-    opacity:.8;
+    opacity:.82;
 }
 
 .footer-text{
     color:#696164;
     font-size:8px;
-    letter-spacing:.15em;
+    letter-spacing:.14em;
 }
 
-/* =========================================
+/* =========================================================
    DESKTOP
-========================================= */
+========================================================= */
 
 @media(min-width:800px){
 
-    .option-grid{
+    .options{
+        grid-template-columns:repeat(3,1fr);
+    }
+
+    .option{
+        min-height:105px;
+    }
+
+    .time-grid{
         grid-template-columns:repeat(4,1fr);
     }
 
-    .option-card{
-        min-height:105px;
-        flex-direction:column;
-        align-items:flex-start;
-        justify-content:space-between;
-    }
-
-    .option-index{
-        align-self:flex-end;
-    }
-
-    .choice-scroll{
-        padding-left:40px;
-        padding-right:40px;
-    }
-
-    .date-box{
+    .calendar-box{
         padding:25px;
     }
 
     .day{
         font-size:12px;
     }
+
+    .choice-scroll{
+        padding-left:40px;
+        padding-right:40px;
+    }
 }
 
-/* =========================================
+/* =========================================================
    MOBILE
-========================================= */
+========================================================= */
 
 @media(max-width:520px){
 
@@ -1073,20 +1045,16 @@ button{
         font-size:clamp(38px,10.5vw,58px);
     }
 
-    .intro-description{
+    .intro-text{
         font-size:12px;
     }
 
-    .choice-header{
-        margin-bottom:34px;
+    .options{
+        grid-template-columns:1fr 1fr;
     }
 
-    .choice-block{
-        margin-bottom:31px;
-    }
-
-    .option-card{
-        min-height:68px;
+    .option{
+        min-height:70px;
         padding:14px;
     }
 
@@ -1094,36 +1062,21 @@ button{
         font-size:11px;
     }
 
-    .date-box{
-        padding:15px;
+    .calendar-box{
+        padding:14px;
     }
 
     .time-grid{
         grid-template-columns:repeat(3,1fr);
     }
 
-    .time-card{
-        height:50px;
+    .time{
+        height:52px;
         font-size:11px;
     }
 
-    .date-selected{
-        font-size:16px;
-    }
-}
-
-@media(max-height:670px){
-
-    .choice-header{
-        margin-bottom:25px;
-    }
-
-    .choice-block{
-        margin-bottom:25px;
-    }
-
-    .option-card{
-        min-height:60px;
+    .summary-card{
+        padding:20px 16px;
     }
 }
 
@@ -1135,7 +1088,6 @@ button{
         animation-duration:.01ms!important;
         animation-iteration-count:1!important;
         transition-duration:.01ms!important;
-        scroll-behavior:auto!important;
     }
 }
 </style>
@@ -1143,44 +1095,63 @@ button{
 
 <body>
 
+<!-- =====================================================
+     LOADER
+===================================================== -->
+
 <div class="loader" id="loader">
-    <div class="loader-box">
-        <img src="logo.png" class="loader-logo" alt="DENI">
+
+    <div class="loader-content">
+
+        <img
+            src="logo.png"
+            class="loader-logo"
+            alt="DENI"
+        >
+
         <div class="loader-line"></div>
+
     </div>
+
 </div>
+
 
 <div class="ambient"></div>
 <div class="grain"></div>
 
+
 <main class="app">
 
-<!-- =================================================
-     SCENE 1
-================================================= -->
 
-<section class="scene intro active" id="scene1">
+<!-- =====================================================
+     SCENE 1 — INTRO
+===================================================== -->
+
+<section class="scene intro active" id="introScene">
 
     <div class="intro-content">
 
-        <div class="micro">
+        <div class="kicker">
             ერთი პატარა მოწვევა
         </div>
 
         <h1 class="intro-title">
-            მინდა, ერთი<br>
-            განსაკუთრებული საღამო<br>
-            შენთან ერთად გავატარო.
+            მინდოდა,<br>
+            უბრალოდ დამეპატიჟებინე…
         </h1>
 
-        <p class="intro-description">
-            და ამისთვის ერთი პატარა მოწვევა მაქვს…
-            იქნებ ამ საღამოს ჩემთან ერთად წამოხვიდე?
+        <p class="intro-text">
+            მაგრამ ჩვეულებრივი მოწვევა შენთვის
+            ზედმეტად ჩვეულებრივი იქნებოდა.
+            ამიტომ ეს საღამო ცოტა სხვანაირად უნდა დაიწყოს.
         </p>
 
-        <button class="open-button" id="startBtn">
+        <button
+            class="intro-button"
+            id="openInvitation"
+        >
             <span>მოწვევის გახსნა</span>
-            <span class="open-arrow">→</span>
+            <span class="arrow">→</span>
         </button>
 
     </div>
@@ -1188,17 +1159,17 @@ button{
 </section>
 
 
-<!-- =================================================
+<!-- =====================================================
      VIDEO 1
-================================================= -->
+===================================================== -->
 
-<section class="scene video-scene" id="scene2">
+<section class="scene video-scene" id="videoScene1">
 
     <div class="video-wrap">
 
         <video
-            class="video"
             id="video1"
+            class="video"
             playsinline
             muted
             preload="auto"
@@ -1209,7 +1180,7 @@ button{
             <source src="vide1.mp4" type="video/mp4">
         </video>
 
-        <div class="video-shade"></div>
+        <div class="video-overlay"></div>
 
         <div class="video-title">
             დაბრძანდი…
@@ -1232,11 +1203,11 @@ button{
 </section>
 
 
-<!-- =================================================
+<!-- =====================================================
      INTERLUDE
-================================================= -->
+===================================================== -->
 
-<section class="scene interlude" id="scene3">
+<section class="scene interlude" id="interludeScene">
 
     <div class="interlude-content">
 
@@ -1257,17 +1228,17 @@ button{
 </section>
 
 
-<!-- =================================================
+<!-- =====================================================
      VIDEO 2
-================================================= -->
+===================================================== -->
 
-<section class="scene video-scene" id="scene4">
+<section class="scene video-scene" id="videoScene2">
 
     <div class="video-wrap">
 
         <video
-            class="video"
             id="video2"
+            class="video"
             playsinline
             muted
             preload="auto"
@@ -1278,7 +1249,7 @@ button{
             <source src="vide2.mp4" type="video/mp4">
         </video>
 
-        <div class="video-shade"></div>
+        <div class="video-overlay"></div>
 
         <div class="video-title">
             გზა უკვე დაიწყო.
@@ -1301,262 +1272,133 @@ button{
 </section>
 
 
-<!-- =================================================
-     CHOICES
-================================================= -->
+<!-- =====================================================
+     STEP 1 — DRINK
+===================================================== -->
 
-<section class="scene choice-scene" id="scene5">
+<section class="scene choice-scene" id="drinkScene">
 
     <div class="choice-scroll">
 
         <div class="choice-container">
 
-            <header class="choice-header">
+            <div class="choice-header">
 
-                <div class="micro">
-                    შენი საღამო
+                <div class="step-counter">
+                    01 / 04
                 </div>
 
-                <h2>
-                    ახლა შენ გადაწყვიტე.
+                <h2 class="choice-title">
+                    რას დალევ?
                 </h2>
 
-                <p>
-                    დანარჩენი საღამო შენზეა.
+                <p class="choice-subtitle">
+                    საღამოს პირველი არჩევანი შენია.
                 </p>
 
-            </header>
-
-
-            <!-- DRINK -->
-
-            <div class="choice-block">
-
-                <div class="choice-block-head">
-
-                    <div class="choice-block-title">
-                        რას დალევ?
-                    </div>
-
-                    <div class="choice-block-number">
-                        01
-                    </div>
-
-                </div>
-
-                <div
-                    class="option-grid"
-                    data-group="drink"
-                >
-
-                    <button class="option-card" data-value="ღვინო">
-                        <span class="option-name">ღვინო</span>
-                        <span class="option-index">01</span>
-                    </button>
-
-                    <button class="option-card" data-value="კოქტეილი">
-                        <span class="option-name">კოქტეილი</span>
-                        <span class="option-index">02</span>
-                    </button>
-
-                    <button class="option-card" data-value="ლიმონათი">
-                        <span class="option-name">ლიმონათი</span>
-                        <span class="option-index">03</span>
-                    </button>
-
-                    <button class="option-card" data-value="წყალი">
-                        <span class="option-name">წყალი</span>
-                        <span class="option-index">04</span>
-                    </button>
-
-                </div>
-
             </div>
 
 
-            <!-- FOOD -->
+            <div
+                class="options"
+                id="drinkOptions"
+            >
 
-            <div class="choice-block">
-
-                <div class="choice-block-head">
-
-                    <div class="choice-block-title">
-                        რას მიირთმევ?
-                    </div>
-
-                    <div class="choice-block-number">
-                        02
-                    </div>
-
-                </div>
-
-                <div
-                    class="option-grid"
-                    data-group="food"
-                >
-
-                    <button class="option-card" data-value="სტეიკი">
-                        <span class="option-name">სტეიკი</span>
-                        <span class="option-index">01</span>
-                    </button>
-
-                    <button class="option-card" data-value="პასტა">
-                        <span class="option-name">პასტა</span>
-                        <span class="option-index">02</span>
-                    </button>
-
-                    <button class="option-card" data-value="სალათი">
-                        <span class="option-name">სალათი</span>
-                        <span class="option-index">03</span>
-                    </button>
-
-                    <button class="option-card" data-value="დესერტი">
-                        <span class="option-name">დესერტი</span>
-                        <span class="option-index">04</span>
-                    </button>
-
-                </div>
-
-            </div>
-
-
-            <!-- DATE -->
-
-            <div class="choice-block">
-
-                <div class="choice-block-head">
-
-                    <div class="choice-block-title">
-                        რომელ დღეს?
-                    </div>
-
-                    <div class="choice-block-number">
-                        03
-                    </div>
-
-                </div>
-
-                <div class="date-box">
-
-                    <div class="date-top">
-
-                        <div
-                            class="date-selected"
-                            id="selectedDateText"
-                        >
-                            აირჩიე დღე
-                        </div>
-
-                        <div class="date-hint">
-                            DATE
-                        </div>
-
-                    </div>
-
-                    <div class="calendar-week">
-
-                        <div class="week-day">ორშ</div>
-                        <div class="week-day">სამ</div>
-                        <div class="week-day">ოთხ</div>
-                        <div class="week-day">ხუთ</div>
-                        <div class="week-day">პარ</div>
-                        <div class="week-day">შაბ</div>
-                        <div class="week-day">კვი</div>
-
-                    </div>
-
-                    <div
-                        class="calendar"
-                        id="calendar"
-                    ></div>
-
-                </div>
-
-            </div>
-
-
-            <!-- TIME -->
-
-            <div class="choice-block">
-
-                <div class="choice-block-head">
-
-                    <div class="choice-block-title">
-                        რომელ საათზე?
-                    </div>
-
-                    <div class="choice-block-number">
-                        04
-                    </div>
-
-                </div>
-
-                <div class="time-grid" id="timeGrid">
-
-                    <button class="time-card" data-time="18:00">
-                        18:00
-                    </button>
-
-                    <button class="time-card" data-time="18:30">
-                        18:30
-                    </button>
-
-                    <button class="time-card" data-time="19:00">
-                        19:00
-                    </button>
-
-                    <button class="time-card" data-time="19:30">
-                        19:30
-                    </button>
-
-                    <button class="time-card" data-time="20:00">
-                        20:00
-                    </button>
-
-                    <button class="time-card" data-time="20:30">
-                        20:30
-                    </button>
-
-                    <button class="time-card" data-time="21:00">
-                        21:00
-                    </button>
-
-                    <button class="time-card" data-time="21:30">
-                        21:30
-                    </button>
-
-                </div>
-
-            </div>
-
-
-            <!-- ACTION -->
-
-            <div class="action-area">
-
-                <button
-                    class="continue-button"
-                    id="continueBtn"
-                >
-
-                    <span class="continue-inner">
-                        <span>გაგრძელება</span>
-                        <span class="continue-arrow">→</span>
-                    </span>
-
+                <button class="option" data-value="წითელი ღვინო">
+                    <span class="option-name">წითელი ღვინო</span>
+                    <span class="option-number">01</span>
                 </button>
 
-                <div
-                    class="error"
-                    id="errorMessage"
-                ></div>
+                <button class="option" data-value="თეთრი ღვინო">
+                    <span class="option-name">თეთრი ღვინო</span>
+                    <span class="option-number">02</span>
+                </button>
 
-                <div
-                    class="success"
-                    id="successMessage"
+                <button class="option" data-value="ვარდისფერი ღვინო">
+                    <span class="option-name">ვარდისფერი ღვინო</span>
+                    <span class="option-number">03</span>
+                </button>
+
+                <button class="option" data-value="შამპანური">
+                    <span class="option-name">შამპანური</span>
+                    <span class="option-number">04</span>
+                </button>
+
+                <button class="option" data-value="მოჰიტო">
+                    <span class="option-name">მოჰიტო</span>
+                    <span class="option-number">05</span>
+                </button>
+
+                <button class="option" data-value="მარგარიტა">
+                    <span class="option-name">მარგარიტა</span>
+                    <span class="option-number">06</span>
+                </button>
+
+                <button class="option" data-value="კოსმოპოლიტენი">
+                    <span class="option-name">კოსმოპოლიტენი</span>
+                    <span class="option-number">07</span>
+                </button>
+
+                <button class="option" data-value="Aperol Spritz">
+                    <span class="option-name">Aperol Spritz</span>
+                    <span class="option-number">08</span>
+                </button>
+
+                <button class="option" data-value="Mojito">
+                    <span class="option-name">Mojito</span>
+                    <span class="option-number">09</span>
+                </button>
+
+                <button class="option" data-value="Cola">
+                    <span class="option-name">Cola</span>
+                    <span class="option-number">10</span>
+                </button>
+
+                <button class="option" data-value="Fanta">
+                    <span class="option-name">Fanta</span>
+                    <span class="option-number">11</span>
+                </button>
+
+                <button class="option" data-value="Sprite">
+                    <span class="option-name">Sprite</span>
+                    <span class="option-number">12</span>
+                </button>
+
+                <button class="option" data-value="ლიმონათი">
+                    <span class="option-name">ლიმონათი</span>
+                    <span class="option-number">13</span>
+                </button>
+
+                <button class="option" data-value="ცივი ჩაი">
+                    <span class="option-name">ცივი ჩაი</span>
+                    <span class="option-number">14</span>
+                </button>
+
+                <button class="option" data-value="მინერალური წყალი">
+                    <span class="option-name">მინერალური წყალი</span>
+                    <span class="option-number">15</span>
+                </button>
+
+                <button class="option" data-value="წყალი">
+                    <span class="option-name">წყალი</span>
+                    <span class="option-number">16</span>
+                </button>
+
+            </div>
+
+
+            <div class="next-area">
+
+                <button
+                    class="next-button"
+                    id="drinkNext"
+                    disabled
                 >
-                    არჩევანი მიღებულია.
-                </div>
+                    <span class="next-content">
+                        <span>შემდეგი — საჭმელი</span>
+                        <span class="next-arrow">→</span>
+                    </span>
+                </button>
 
             </div>
 
@@ -1567,17 +1409,458 @@ button{
 </section>
 
 
-<!-- =================================================
-     VIDEO 3
-================================================= -->
+<!-- =====================================================
+     STEP 2 — FOOD
+===================================================== -->
 
-<section class="scene video-scene" id="scene6">
+<section class="scene choice-scene" id="foodScene">
+
+    <div class="choice-scroll">
+
+        <div class="choice-container">
+
+            <div class="choice-header">
+
+                <div class="step-counter">
+                    02 / 04
+                </div>
+
+                <h2 class="choice-title">
+                    ახლა მთავარი…
+                </h2>
+
+                <p class="choice-subtitle">
+                    რას მიირთმევ ამ საღამოს?
+                </p>
+
+            </div>
+
+
+            <div
+                class="options"
+                id="foodOptions"
+            >
+
+                <button class="option" data-value="სტეიკი">
+                    <span class="option-name">სტეიკი</span>
+                    <span class="option-number">01</span>
+                </button>
+
+                <button class="option" data-value="პასტა">
+                    <span class="option-name">პასტა</span>
+                    <span class="option-number">02</span>
+                </button>
+
+                <button class="option" data-value="პიცა">
+                    <span class="option-name">პიცა</span>
+                    <span class="option-number">03</span>
+                </button>
+
+                <button class="option" data-value="ბურგერი">
+                    <span class="option-name">ბურგერი</span>
+                    <span class="option-number">04</span>
+                </button>
+
+                <button class="option" data-value="რიზოტო">
+                    <span class="option-name">რიზოტო</span>
+                    <span class="option-number">05</span>
+                </button>
+
+                <button class="option" data-value="ქათამი">
+                    <span class="option-name">ქათამი</span>
+                    <span class="option-number">06</span>
+                </button>
+
+                <button class="option" data-value="თევზი">
+                    <span class="option-name">თევზი</span>
+                    <span class="option-number">07</span>
+                </button>
+
+                <button class="option" data-value="ცეზარის სალათი">
+                    <span class="option-name">ცეზარის სალათი</span>
+                    <span class="option-number">08</span>
+                </button>
+
+                <button class="option" data-value="ბერძნული სალათი">
+                    <span class="option-name">ბერძნული სალათი</span>
+                    <span class="option-number">09</span>
+                </button>
+
+                <button class="option" data-value="ბრუსკეტა">
+                    <span class="option-name">ბრუსკეტა</span>
+                    <span class="option-number">10</span>
+                </button>
+
+                <button class="option" data-value="ტირამისუ">
+                    <span class="option-name">ტირამისუ</span>
+                    <span class="option-number">11</span>
+                </button>
+
+                <button class="option" data-value="ჩიზქეიქი">
+                    <span class="option-name">ჩიზქეიქი</span>
+                    <span class="option-number">12</span>
+                </button>
+
+                <button class="option" data-value="შოკოლადის დესერტი">
+                    <span class="option-name">შოკოლადის დესერტი</span>
+                    <span class="option-number">13</span>
+                </button>
+
+                <button class="option" data-value="ნაყინი">
+                    <span class="option-name">ნაყინი</span>
+                    <span class="option-number">14</span>
+                </button>
+
+            </div>
+
+
+            <div class="next-area">
+
+                <button
+                    class="next-button"
+                    id="foodNext"
+                    disabled
+                >
+                    <span class="next-content">
+                        <span>შემდეგი — დღე</span>
+                        <span class="next-arrow">→</span>
+                    </span>
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     STEP 3 — DATE
+===================================================== -->
+
+<section class="scene choice-scene" id="dateScene">
+
+    <div class="choice-scroll">
+
+        <div class="choice-container">
+
+            <div class="choice-header">
+
+                <div class="step-counter">
+                    03 / 04
+                </div>
+
+                <h2 class="choice-title">
+                    რომელ დღეს?
+                </h2>
+
+                <p class="choice-subtitle">
+                    აირჩიე დღე, რომელიც შენთვის ყველაზე კარგია.
+                </p>
+
+            </div>
+
+
+            <div class="calendar-box">
+
+                <div class="calendar-header">
+
+                    <div
+                        class="month-name"
+                        id="monthName"
+                    ></div>
+
+                    <div class="calendar-caption">
+                        CHOOSE A DATE
+                    </div>
+
+                </div>
+
+
+                <div class="weekdays">
+
+                    <div class="weekday">ორშ</div>
+                    <div class="weekday">სამ</div>
+                    <div class="weekday">ოთხ</div>
+                    <div class="weekday">ხუთ</div>
+                    <div class="weekday">პარ</div>
+                    <div class="weekday">შაბ</div>
+                    <div class="weekday">კვი</div>
+
+                </div>
+
+
+                <div
+                    class="days"
+                    id="calendar"
+                ></div>
+
+            </div>
+
+
+            <div class="next-area">
+
+                <button
+                    class="next-button"
+                    id="dateNext"
+                    disabled
+                >
+                    <span class="next-content">
+                        <span>შემდეგი — საათი</span>
+                        <span class="next-arrow">→</span>
+                    </span>
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     STEP 4 — TIME
+===================================================== -->
+
+<section class="scene choice-scene" id="timeScene">
+
+    <div class="choice-scroll">
+
+        <div class="choice-container">
+
+            <div class="choice-header">
+
+                <div class="step-counter">
+                    04 / 04
+                </div>
+
+                <h2 class="choice-title">
+                    რომელ საათზე?
+                </h2>
+
+                <p class="choice-subtitle">
+                    და ბოლოს… რომელ საათზე გელოდო?
+                </p>
+
+            </div>
+
+
+            <div
+                class="time-grid"
+                id="timeOptions"
+            >
+
+                <button class="time" data-value="18:00">
+                    18:00
+                </button>
+
+                <button class="time" data-value="18:30">
+                    18:30
+                </button>
+
+                <button class="time" data-value="19:00">
+                    19:00
+                </button>
+
+                <button class="time" data-value="19:30">
+                    19:30
+                </button>
+
+                <button class="time" data-value="20:00">
+                    20:00
+                </button>
+
+                <button class="time" data-value="20:30">
+                    20:30
+                </button>
+
+                <button class="time" data-value="21:00">
+                    21:00
+                </button>
+
+                <button class="time" data-value="21:30">
+                    21:30
+                </button>
+
+                <button class="time" data-value="22:00">
+                    22:00
+                </button>
+
+                <button class="time" data-value="22:30">
+                    22:30
+                </button>
+
+                <button class="time" data-value="23:00">
+                    23:00
+                </button>
+
+                <button class="time" data-value="23:30">
+                    23:30
+                </button>
+
+            </div>
+
+
+            <div class="next-area">
+
+                <button
+                    class="next-button"
+                    id="timeNext"
+                    disabled
+                >
+                    <span class="next-content">
+                        <span>არჩევანის ნახვა</span>
+                        <span class="next-arrow">→</span>
+                    </span>
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     SUMMARY
+===================================================== -->
+
+<section class="scene choice-scene" id="summaryScene">
+
+    <div class="choice-scroll">
+
+        <div class="choice-container">
+
+            <div class="choice-header">
+
+                <div class="step-counter">
+                    FINAL
+                </div>
+
+                <h2 class="choice-title">
+                    შენი საღამო.
+                </h2>
+
+                <p class="choice-subtitle">
+                    ყველაფერი მზად არის.
+                </p>
+
+            </div>
+
+
+            <div class="summary-card">
+
+                <div class="summary-top">
+
+                    <div class="summary-title">
+                        საღამოს გეგმა
+                    </div>
+
+                    <div class="summary-label">
+                        PRIVATE INVITATION
+                    </div>
+
+                </div>
+
+
+                <div class="summary-list">
+
+                    <div class="summary-row">
+
+                        <div class="summary-key">
+                            სასმელი
+                        </div>
+
+                        <div
+                            class="summary-value"
+                            id="summaryDrink"
+                        ></div>
+
+                    </div>
+
+
+                    <div class="summary-row">
+
+                        <div class="summary-key">
+                            საჭმელი
+                        </div>
+
+                        <div
+                            class="summary-value"
+                            id="summaryFood"
+                        ></div>
+
+                    </div>
+
+
+                    <div class="summary-row">
+
+                        <div class="summary-key">
+                            დღე
+                        </div>
+
+                        <div
+                            class="summary-value"
+                            id="summaryDate"
+                        ></div>
+
+                    </div>
+
+
+                    <div class="summary-row">
+
+                        <div class="summary-key">
+                            საათი
+                        </div>
+
+                        <div
+                            class="summary-value"
+                            id="summaryTime"
+                        ></div>
+
+                    </div>
+
+                </div>
+
+
+                <button
+                    class="confirm-button"
+                    id="confirmButton"
+                >
+                    არჩევანი დავადასტურო →
+                </button>
+
+                <div
+                    class="error"
+                    id="errorMessage"
+                ></div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     VIDEO 3
+===================================================== -->
+
+<section class="scene video-scene" id="videoScene3">
 
     <div class="video-wrap">
 
         <video
-            class="video"
             id="video3"
+            class="video"
             playsinline
             muted
             preload="auto"
@@ -1588,7 +1871,7 @@ button{
             <source src="vide3.mp4" type="video/mp4">
         </video>
 
-        <div class="video-shade"></div>
+        <div class="video-overlay"></div>
 
         <div class="video-info">
 
@@ -1607,15 +1890,15 @@ button{
 </section>
 
 
-<!-- =================================================
+<!-- =====================================================
      FINAL
-================================================= -->
+===================================================== -->
 
-<section class="scene final" id="scene7">
+<section class="scene final" id="finalScene">
 
     <div class="final-content">
 
-        <div class="micro">
+        <div class="kicker">
             საღამოს დასასრული
         </div>
 
@@ -1623,11 +1906,11 @@ button{
             გელოდები.
         </h2>
 
-        <p class="final-description">
+        <p class="final-text">
             ამ საღამოს შენთან ერთად ველოდები.
         </p>
 
-        <div class="final-signature">
+        <div class="signature">
             — დემეტრე
         </div>
 
@@ -1649,78 +1932,23 @@ button{
 
 </section>
 
+
 </main>
 
 
 <script>
 
-/* =====================================================
+/* =========================================================
    CONFIG
-===================================================== */
+========================================================= */
 
 const FORMSPREE_URL =
     "PASTE_YOUR_FORMSPREE_LINK_HERE";
 
 
-/* =====================================================
-   ELEMENTS
-===================================================== */
-
-const loader =
-    document.getElementById("loader");
-
-const scene1 =
-    document.getElementById("scene1");
-
-const scene2 =
-    document.getElementById("scene2");
-
-const scene3 =
-    document.getElementById("scene3");
-
-const scene4 =
-    document.getElementById("scene4");
-
-const scene5 =
-    document.getElementById("scene5");
-
-const scene6 =
-    document.getElementById("scene6");
-
-const scene7 =
-    document.getElementById("scene7");
-
-const video1 =
-    document.getElementById("video1");
-
-const video2 =
-    document.getElementById("video2");
-
-const video3 =
-    document.getElementById("video3");
-
-const startBtn =
-    document.getElementById("startBtn");
-
-const continueBtn =
-    document.getElementById("continueBtn");
-
-const errorMessage =
-    document.getElementById("errorMessage");
-
-const successMessage =
-    document.getElementById("successMessage");
-
-const calendar =
-    document.getElementById("calendar");
-
-const selectedDateText =
-    document.getElementById("selectedDateText");
-
-
-/* =====================================================
+/* =========================================================
    STATE
-===================================================== */
+========================================================= */
 
 const state = {
     drink:"",
@@ -1731,9 +1959,63 @@ const state = {
 };
 
 
-/* =====================================================
+/* =========================================================
+   ELEMENTS
+========================================================= */
+
+const loader =
+    document.getElementById("loader");
+
+const scenes = {
+
+    intro:
+        document.getElementById("introScene"),
+
+    video1:
+        document.getElementById("videoScene1"),
+
+    interlude:
+        document.getElementById("interludeScene"),
+
+    video2:
+        document.getElementById("videoScene2"),
+
+    drink:
+        document.getElementById("drinkScene"),
+
+    food:
+        document.getElementById("foodScene"),
+
+    date:
+        document.getElementById("dateScene"),
+
+    time:
+        document.getElementById("timeScene"),
+
+    summary:
+        document.getElementById("summaryScene"),
+
+    video3:
+        document.getElementById("videoScene3"),
+
+    final:
+        document.getElementById("finalScene")
+};
+
+
+const video1 =
+    document.getElementById("video1");
+
+const video2 =
+    document.getElementById("video2");
+
+const video3 =
+    document.getElementById("video3");
+
+
+/* =========================================================
    LOADER
-===================================================== */
+========================================================= */
 
 window.addEventListener("load",()=>{
 
@@ -1746,64 +2028,57 @@ window.addEventListener("load",()=>{
 });
 
 
-/* =====================================================
-   SCENE CONTROL
-===================================================== */
+/* =========================================================
+   SCENE
+========================================================= */
 
-function activateScene(scene){
+function showScene(scene){
 
     document
-        .querySelectorAll(".scene")
-        .forEach(item=>{
-            item.classList.remove("active");
-        });
+    .querySelectorAll(".scene")
+    .forEach(item=>{
+        item.classList.remove("active");
+    });
 
     scene.classList.add("active");
 
 }
 
 
-/* =====================================================
-   SAFE VIDEO PLAY
-===================================================== */
+/* =========================================================
+   VIDEO ENGINE
+========================================================= */
 
-async function startVideo(video, scene){
+async function playVideo(video,scene){
 
-    activateScene(scene);
+    showScene(scene);
 
     scene.classList.remove("playing");
 
     try{
-
         video.pause();
-
     }catch(e){}
 
     try{
-
-        video.currentTime = 0;
-
+        video.currentTime=0;
     }catch(e){}
 
-
     /*
-       Important:
-       force browser to prepare local MP4
+      Force browser to reload the local MP4
+      before playing.
     */
 
     try{
-
         video.load();
-
     }catch(e){}
 
 
-    const playNow = async()=>{
+    const play = async()=>{
 
         try{
 
-            video.muted = true;
-            video.playsInline = true;
+            video.muted=true;
+            video.playsInline=true;
 
             await video.play();
 
@@ -1812,13 +2087,14 @@ async function startVideo(video, scene){
         }catch(error){
 
             console.warn(
-                "Video autoplay was blocked:",
+                "Autoplay attempt failed:",
                 error
             );
 
             /*
-             * Try once more after a tiny delay.
-             */
+              Retry once after browser has
+              completed the scene transition.
+            */
 
             setTimeout(async()=>{
 
@@ -1828,16 +2104,16 @@ async function startVideo(video, scene){
 
                     scene.classList.add("playing");
 
-                }catch(e){
+                }catch(secondError){
 
                     console.warn(
-                        "Second video play attempt failed.",
-                        e
+                        "Second play attempt failed:",
+                        secondError
                     );
 
                 }
 
-            },120);
+            },150);
 
         }
 
@@ -1846,7 +2122,7 @@ async function startVideo(video, scene){
 
     if(video.readyState >= 2){
 
-        await playNow();
+        await play();
 
         return;
 
@@ -1855,13 +2131,13 @@ async function startVideo(video, scene){
 
     await new Promise(resolve=>{
 
-        let finished = false;
+        let done=false;
 
-        const finish = ()=>{
+        const finish=()=>{
 
-            if(finished) return;
+            if(done)return;
 
-            finished = true;
+            done=true;
 
             video.removeEventListener(
                 "canplay",
@@ -1877,6 +2153,7 @@ async function startVideo(video, scene){
 
         };
 
+
         video.addEventListener(
             "canplay",
             finish,
@@ -1889,36 +2166,39 @@ async function startVideo(video, scene){
             {once:true}
         );
 
+
         setTimeout(
             finish,
-            2500
+            3000
         );
 
     });
 
 
-    await playNow();
+    await play();
 
 }
 
 
-/* =====================================================
-   INTRO → VIDEO 1
-===================================================== */
+/* =========================================================
+   INTRO
+========================================================= */
 
-startBtn.addEventListener("click",async()=>{
+document
+.getElementById("openInvitation")
+.addEventListener("click",async()=>{
 
-    await startVideo(
+    await playVideo(
         video1,
-        scene2
+        scenes.video1
     );
 
 });
 
 
-/* =====================================================
+/* =========================================================
    VIDEO 1 → INTERLUDE
-===================================================== */
+========================================================= */
 
 video1.addEventListener("ended",()=>{
 
@@ -1926,23 +2206,26 @@ video1.addEventListener("ended",()=>{
         video1.pause();
     }catch(e){}
 
-    activateScene(scene3);
+    showScene(
+        scenes.interlude
+    );
+
 
     setTimeout(async()=>{
 
-        await startVideo(
+        await playVideo(
             video2,
-            scene4
+            scenes.video2
         );
 
-    },1500);
+    },1450);
 
 });
 
 
-/* =====================================================
-   VIDEO 2 → CHOICES
-===================================================== */
+/* =========================================================
+   VIDEO 2 → DRINK
+========================================================= */
 
 video2.addEventListener("ended",()=>{
 
@@ -1950,172 +2233,325 @@ video2.addEventListener("ended",()=>{
         video2.pause();
     }catch(e){}
 
-    activateScene(scene5);
+    showScene(
+        scenes.drink
+    );
 
 });
 
 
-/* =====================================================
-   OPTION SELECTION
-===================================================== */
+/* =========================================================
+   DRINK SELECTION
+========================================================= */
 
-document
-.querySelectorAll(".option-grid")
-.forEach(group=>{
+const drinkOptions =
+    document.querySelectorAll(
+        "#drinkOptions .option"
+    );
 
-    const groupName =
-        group.dataset.group;
+const drinkNext =
+    document.getElementById(
+        "drinkNext"
+    );
 
-    group
-    .querySelectorAll(".option-card")
-    .forEach(card=>{
 
-        card.addEventListener("click",()=>{
+drinkOptions.forEach(option=>{
 
-            group
-            .querySelectorAll(".option-card")
-            .forEach(item=>{
-                item.classList.remove("selected");
+    option.addEventListener(
+        "click",
+        ()=>{
+
+            drinkOptions.forEach(item=>{
+                item.classList.remove(
+                    "selected"
+                );
             });
 
-            card.classList.add("selected");
+            option.classList.add(
+                "selected"
+            );
 
-            state[groupName] =
-                card.dataset.value;
+            state.drink =
+                option.dataset.value;
 
-            errorMessage.textContent = "";
+            drinkNext.disabled=false;
 
-        });
-
-    });
+        }
+    );
 
 });
 
 
-/* =====================================================
+drinkNext.addEventListener(
+    "click",
+    ()=>{
+
+        if(!state.drink)return;
+
+        showScene(
+            scenes.food
+        );
+
+    }
+);
+
+
+/* =========================================================
+   FOOD SELECTION
+========================================================= */
+
+const foodOptions =
+    document.querySelectorAll(
+        "#foodOptions .option"
+    );
+
+const foodNext =
+    document.getElementById(
+        "foodNext"
+    );
+
+
+foodOptions.forEach(option=>{
+
+    option.addEventListener(
+        "click",
+        ()=>{
+
+            foodOptions.forEach(item=>{
+                item.classList.remove(
+                    "selected"
+                );
+            });
+
+            option.classList.add(
+                "selected"
+            );
+
+            state.food =
+                option.dataset.value;
+
+            foodNext.disabled=false;
+
+        }
+    );
+
+});
+
+
+foodNext.addEventListener(
+    "click",
+    ()=>{
+
+        if(!state.food)return;
+
+        showScene(
+            scenes.date
+        );
+
+    }
+);
+
+
+/* =========================================================
    CALENDAR
-===================================================== */
+========================================================= */
 
-const now = new Date();
+const calendar =
+    document.getElementById(
+        "calendar"
+    );
 
-const currentYear =
+const monthName =
+    document.getElementById(
+        "monthName"
+    );
+
+const dateNext =
+    document.getElementById(
+        "dateNext"
+    );
+
+
+const now =
+    new Date();
+
+const calendarYear =
     now.getFullYear();
 
-const currentMonth =
+const calendarMonth =
     now.getMonth();
+
+
+const georgianMonths = [
+    "იანვარი",
+    "თებერვალი",
+    "მარტი",
+    "აპრილი",
+    "მაისი",
+    "ივნისი",
+    "ივლისი",
+    "აგვისტო",
+    "სექტემბერი",
+    "ოქტომბერი",
+    "ნოემბერი",
+    "დეკემბერი"
+];
+
+
+monthName.textContent =
+    `${georgianMonths[calendarMonth]} ${calendarYear}`;
+
 
 function createCalendar(){
 
-    calendar.innerHTML = "";
+    calendar.innerHTML="";
 
-    /*
-      Show current month and the next 5 months
-      through a small horizontal month system
-      using the current month initially.
-    */
-
-    const year = currentYear;
-    const month = currentMonth;
 
     const firstDay =
-        new Date(year,month,1);
+        new Date(
+            calendarYear,
+            calendarMonth,
+            1
+        );
 
-    let start =
+
+    let offset =
         firstDay.getDay();
 
+
     /*
-      Convert Sunday=0 to Monday=0
+      Convert Sunday-first
+      to Monday-first.
     */
 
-    start =
-        start === 0
+    offset =
+        offset===0
         ? 6
-        : start - 1;
+        : offset-1;
 
-    const days =
+
+    const totalDays =
         new Date(
-            year,
-            month + 1,
+            calendarYear,
+            calendarMonth+1,
             0
         ).getDate();
 
 
-    for(let i=0;i<start;i++){
+    for(let i=0;i<offset;i++){
 
         const empty =
-            document.createElement("div");
+            document.createElement(
+                "div"
+            );
 
-        empty.className =
+        empty.className=
             "day empty";
 
-        calendar.appendChild(empty);
+        calendar.appendChild(
+            empty
+        );
 
     }
 
 
-    for(let day=1;day<=days;day++){
+    for(
+        let day=1;
+        day<=totalDays;
+        day++
+    ){
 
         const button =
-            document.createElement("button");
+            document.createElement(
+                "button"
+            );
 
-        button.className =
-            "day";
+        button.type="button";
 
-        button.type =
-            "button";
+        button.className="day";
 
-        button.textContent =
-            day;
+        button.textContent=day;
 
 
-        const date =
+        const selectedDate =
             new Date(
-                year,
-                month,
+                calendarYear,
+                calendarMonth,
                 day
             );
 
 
-        const iso =
-            [
-                year,
-                String(month+1).padStart(2,"0"),
-                String(day).padStart(2,"0")
-            ].join("-");
+        /*
+          Disable past days.
+        */
 
+        const today =
+            new Date();
 
-        if(
-            date.getDate() === now.getDate() &&
-            date.getMonth() === now.getMonth() &&
-            date.getFullYear() === now.getFullYear()
-        ){
+        today.setHours(
+            0,0,0,0
+        );
 
-            button.classList.add("today");
+        if(selectedDate < today){
+
+            button.classList.add(
+                "disabled"
+            );
 
         }
 
 
-        button.addEventListener("click",()=>{
+        button.addEventListener(
+            "click",
+            ()=>{
 
-            calendar
-            .querySelectorAll(".day")
-            .forEach(item=>{
-                item.classList.remove("selected");
-            });
-
-            button.classList.add("selected");
-
-            state.date = iso;
-
-            selectedDateText.textContent =
-                formatDate(iso);
-
-            errorMessage.textContent = "";
-
-        });
+                if(
+                    button.classList.contains(
+                        "disabled"
+                    )
+                ){
+                    return;
+                }
 
 
-        calendar.appendChild(button);
+                calendar
+                .querySelectorAll(".day")
+                .forEach(item=>{
+                    item.classList.remove(
+                        "selected"
+                    );
+                });
+
+
+                button.classList.add(
+                    "selected"
+                );
+
+
+                const month =
+                    String(
+                        calendarMonth+1
+                    ).padStart(2,"0");
+
+
+                const dayString =
+                    String(day)
+                    .padStart(2,"0");
+
+
+                state.date =
+                    `${calendarYear}-${month}-${dayString}`;
+
+
+                dateNext.disabled=false;
+
+            }
+        );
+
+
+        calendar.appendChild(
+            button
+        );
 
     }
 
@@ -2124,20 +2560,81 @@ function createCalendar(){
 createCalendar();
 
 
-/* =====================================================
+/* =========================================================
+   DATE NEXT
+========================================================= */
+
+dateNext.addEventListener(
+    "click",
+    ()=>{
+
+        if(!state.date)return;
+
+        showScene(
+            scenes.time
+        );
+
+    }
+);
+
+
+/* =========================================================
+   TIME
+========================================================= */
+
+const timeOptions =
+    document.querySelectorAll(
+        "#timeOptions .time"
+    );
+
+const timeNext =
+    document.getElementById(
+        "timeNext"
+    );
+
+
+timeOptions.forEach(option=>{
+
+    option.addEventListener(
+        "click",
+        ()=>{
+
+            timeOptions.forEach(item=>{
+                item.classList.remove(
+                    "selected"
+                );
+            });
+
+
+            option.classList.add(
+                "selected"
+            );
+
+
+            state.time =
+                option.dataset.value;
+
+
+            timeNext.disabled=false;
+
+        }
+    );
+
+});
+
+
+/* =========================================================
    DATE FORMAT
-===================================================== */
+========================================================= */
 
 function formatDate(value){
 
-    if(!value){
-        return "";
-    }
+    if(!value)return "";
 
     const parts =
         value.split("-");
 
-    if(parts.length !== 3){
+    if(parts.length!==3){
         return value;
     }
 
@@ -2146,70 +2643,70 @@ function formatDate(value){
 }
 
 
-/* =====================================================
-   TIME
-===================================================== */
+/* =========================================================
+   SUMMARY
+========================================================= */
 
-document
-.querySelectorAll(".time-card")
-.forEach(button=>{
+const summaryDrink =
+    document.getElementById(
+        "summaryDrink"
+    );
 
-    button.addEventListener("click",()=>{
+const summaryFood =
+    document.getElementById(
+        "summaryFood"
+    );
 
-        document
-        .querySelectorAll(".time-card")
-        .forEach(item=>{
-            item.classList.remove("selected");
-        });
+const summaryDate =
+    document.getElementById(
+        "summaryDate"
+    );
 
-        button.classList.add("selected");
-
-        state.time =
-            button.dataset.time;
-
-        errorMessage.textContent = "";
-
-    });
-
-});
+const summaryTime =
+    document.getElementById(
+        "summaryTime"
+    );
 
 
-/* =====================================================
-   VALIDATION
-===================================================== */
+timeNext.addEventListener(
+    "click",
+    ()=>{
 
-function validate(){
+        if(!state.time)return;
 
-    if(!state.drink){
-        return "ჯერ აირჩიე, რას დალევ.";
+
+        summaryDrink.textContent =
+            state.drink;
+
+        summaryFood.textContent =
+            state.food;
+
+        summaryDate.textContent =
+            formatDate(
+                state.date
+            );
+
+        summaryTime.textContent =
+            state.time;
+
+
+        showScene(
+            scenes.summary
+        );
+
     }
-
-    if(!state.food){
-        return "ჯერ აირჩიე, რას მიირთმევ.";
-    }
-
-    if(!state.date){
-        return "აირჩიე სასურველი დღე.";
-    }
-
-    if(!state.time){
-        return "აირჩიე სასურველი საათი.";
-    }
-
-    return "";
-
-}
+);
 
 
-/* =====================================================
+/* =========================================================
    FORMSPREE
-===================================================== */
+========================================================= */
 
-async function submitForm(){
+async function submitToFormspree(){
 
     /*
-      If URL has not been entered yet,
-      allow local testing to continue.
+      If URL isn't configured yet,
+      allow local testing.
     */
 
     if(
@@ -2220,7 +2717,7 @@ async function submitForm(){
     ){
 
         console.warn(
-            "Formspree URL has not been configured."
+            "Formspree URL is not configured."
         );
 
         return true;
@@ -2231,7 +2728,7 @@ async function submitForm(){
     const message = `
 ახალი პასუხი მოსაწვევიდან
 
-━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━
 
 🥂 სასმელი:
 ${state.drink}
@@ -2245,34 +2742,44 @@ ${formatDate(state.date)}
 🕐 საათი:
 ${state.time}
 
-━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━
 `.trim();
 
 
-    const form =
+    const formData =
         new FormData();
 
-    form.append(
+
+    /*
+      One message containing
+      every selected answer.
+    */
+
+    formData.append(
         "message",
         message
     );
 
-    form.append(
+
+    formData.append(
         "drink",
         state.drink
     );
 
-    form.append(
+
+    formData.append(
         "food",
         state.food
     );
 
-    form.append(
+
+    formData.append(
         "date",
         formatDate(state.date)
     );
 
-    form.append(
+
+    formData.append(
         "time",
         state.time
     );
@@ -2283,9 +2790,10 @@ ${state.time}
             FORMSPREE_URL,
             {
                 method:"POST",
-                body:form,
+                body:formData,
                 headers:{
-                    "Accept":"application/json"
+                    "Accept":
+                        "application/json"
                 }
             }
         );
@@ -2294,33 +2802,47 @@ ${state.time}
     if(!response.ok){
 
         throw new Error(
-            "Formspree request failed."
+            "Formspree submission failed"
         );
 
     }
+
 
     return true;
 
 }
 
 
-/* =====================================================
-   CHOICES → VIDEO 3
-===================================================== */
+/* =========================================================
+   CONFIRM
+========================================================= */
 
-continueBtn.addEventListener(
+const confirmButton =
+    document.getElementById(
+        "confirmButton"
+    );
+
+const errorMessage =
+    document.getElementById(
+        "errorMessage"
+    );
+
+
+confirmButton.addEventListener(
     "click",
     async()=>{
 
-        errorMessage.textContent = "";
+        errorMessage.textContent="";
 
-        const error =
-            validate();
-
-        if(error){
+        if(
+            !state.drink ||
+            !state.food ||
+            !state.date ||
+            !state.time
+        ){
 
             errorMessage.textContent =
-                error;
+                "ყველა არჩევანი აუცილებელია.";
 
             return;
 
@@ -2329,9 +2851,9 @@ continueBtn.addEventListener(
 
         if(state.submitted){
 
-            await startVideo(
+            await playVideo(
                 video3,
-                scene6
+                scenes.video3
             );
 
             return;
@@ -2339,56 +2861,48 @@ continueBtn.addEventListener(
         }
 
 
-        continueBtn.disabled = true;
+        confirmButton.disabled=true;
 
-        continueBtn.innerHTML = `
-            <span class="continue-inner">
-                <span>იგზავნება…</span>
-            </span>
-        `;
+        confirmButton.textContent =
+            "იგზავნება…";
 
 
         try{
 
-            await submitForm();
+            await submitToFormspree();
 
-            state.submitted = true;
 
-            successMessage.style.display =
-                "block";
+            state.submitted=true;
 
 
             /*
-               Wait a tiny amount so the
-               selection scene does not
-               disappear abruptly.
+              Small pause before
+              opening the final video.
             */
 
             setTimeout(async()=>{
 
-                await startVideo(
+                await playVideo(
                     video3,
-                    scene6
+                    scenes.video3
                 );
 
-            },500);
+            },450);
 
 
         }catch(error){
 
             console.error(error);
 
+
             errorMessage.textContent =
                 "გაგზავნა ვერ მოხერხდა. სცადე თავიდან.";
 
-            continueBtn.disabled = false;
 
-            continueBtn.innerHTML = `
-                <span class="continue-inner">
-                    <span>გაგრძელება</span>
-                    <span class="continue-arrow">→</span>
-                </span>
-            `;
+            confirmButton.disabled=false;
+
+            confirmButton.textContent =
+                "არჩევანი დავადასტურო →";
 
         }
 
@@ -2396,54 +2910,62 @@ continueBtn.addEventListener(
 );
 
 
-/* =====================================================
+/* =========================================================
    VIDEO 3 → FINAL
-===================================================== */
+========================================================= */
 
-video3.addEventListener("ended",()=>{
+video3.addEventListener(
+    "ended",
+    ()=>{
+
+        try{
+            video3.pause();
+        }catch(e){}
+
+        showScene(
+            scenes.final
+        );
+
+    }
+);
+
+
+/* =========================================================
+   PRELOAD ALL VIDEOS
+========================================================= */
+
+[
+    video1,
+    video2,
+    video3
+].forEach(video=>{
 
     try{
-        video3.pause();
-    }catch(e){}
 
-    activateScene(scene7);
-
-});
-
-
-/* =====================================================
-   PRELOAD
-===================================================== */
-
-function preloadVideo(video){
-
-    try{
-
-        video.preload = "auto";
+        video.preload="auto";
         video.load();
 
-    }catch(e){
+    }catch(error){
 
         console.warn(
-            "Preload failed:",
-            e
+            "Video preload failed:",
+            error
         );
 
     }
 
-}
-
-preloadVideo(video1);
-preloadVideo(video2);
-preloadVideo(video3);
+});
 
 
-/* =====================================================
-   PREVENT CONTEXT MENU ON VIDEOS
-===================================================== */
+/* =========================================================
+   PREVENT VIDEO CONTEXT MENU
+========================================================= */
 
-[video1,video2,video3]
-.forEach(video=>{
+[
+    video1,
+    video2,
+    video3
+].forEach(video=>{
 
     video.addEventListener(
         "contextmenu",
@@ -2455,15 +2977,21 @@ preloadVideo(video3);
 });
 
 
-/* =====================================================
-   PREVENT PAGE SCROLL OUTSIDE CHOICE SCREEN
-===================================================== */
+/* =========================================================
+   PREVENT PAGE MOVEMENT OUTSIDE
+   CHOICE SCREENS
+========================================================= */
 
 document.addEventListener(
     "touchmove",
     event=>{
 
-        if(!scene5.classList.contains("active")){
+        const activeChoice =
+            document.querySelector(
+                ".choice-scene.active"
+            );
+
+        if(!activeChoice){
 
             event.preventDefault();
 
